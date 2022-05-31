@@ -3,6 +3,10 @@ uuid = "35643b39-bfd4-4670-843f-16596ca89bf3"
 authors = ["Chad Scherrer <chad.scherrer@gmail.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+MeasureBase = "fa1605e6-acd5-459c-a1e6-7e635759db14"
+
 [compat]
 julia = "1"
 
