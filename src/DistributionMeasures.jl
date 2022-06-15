@@ -20,6 +20,10 @@ import Statistics
 import StatsBase
 import StatsFuns
 
+using IrrationalConstants: log2π, invsqrt2π
+
+using FillArrays: Fill
+
 import ChainRulesCore
 using ChainRulesCore: ZeroTangent, NoTangent, unthunk, @thunk
 
