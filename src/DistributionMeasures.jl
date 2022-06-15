@@ -22,7 +22,7 @@ import StatsFuns
 
 using IrrationalConstants: log2π, invsqrt2π
 
-using FillArrays: Fill
+using FillArrays: Fill, Ones, Zeros
 
 import ChainRulesCore
 using ChainRulesCore: ZeroTangent, NoTangent, unthunk, @thunk
