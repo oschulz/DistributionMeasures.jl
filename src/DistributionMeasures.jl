@@ -33,6 +33,10 @@ using ArraysOfArrays: ArrayOfSimilarArrays, flatview
 
 
 include("utils.jl")
+include("autodiff_utils.jl")
+include("standard_dist.jl")
+include("standard_uniform.jl")
+include("standard_normal.jl")
 include("distribution_measure.jl")
 
 

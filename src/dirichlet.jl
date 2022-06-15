@@ -9,6 +9,11 @@ function MeasureBase.from_origin(trg::Dirichlet, x::AbstractVector{<:Real})
     to_dirichlet(trg.alpha, src, x)
 end
 
+function MeasureBase.to_origin(trg::Dirichlet, x::AbstractVector{<:Real})
+    # TODO: Implement
+    error("to_origin for Dirichlet is not implemented yet.")
+end
+
 function _dirichlet_beta_trafo(α::Real, β::Real, x::Real)
     R = float(promote_type(typeof(α), typeof(β), typeof(x)))
     convert(R, vartransform(Beta(α, β), StandardUvUniform(), x))::R

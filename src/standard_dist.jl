@@ -1,4 +1,4 @@
-# This file is a part of BAT.jl, licensed under the MIT License (MIT).
+# This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
 
 """
@@ -23,7 +23,6 @@ const StandardMultivariteDist{D<:Distribution{Multivariate,Continuous}} = Standa
 
 StandardDist{D,N}(dims::Vararg{Integer,N}) where {D<:Distribution{Univariate,Continuous},N} = StandardDist{D,N}(dims)
 StandardDist{D}(dims::Vararg{Integer,N}) where {D<:Distribution{Univariate,Continuous},N} = StandardDist{D,N}(dims)
-StandardDist{D}(dims::Vararg{Integer,N}) where {D<:Distribution{Univariate,Continuous},N} = StandardDist{D,Float64}(dims...)
 
 
 function Base.show(io::IO, d::StandardDist{D}) where {D}
@@ -63,11 +62,6 @@ Base.eltype(::Type{StandardDist{D,N}}) where {D,N} = Float64
 
 @inline StatsBase.params(d::StandardDist) = ()
 
-function Distributions.insupport(d::StandardDist{D,N}, x::AbstractArray{U,N}) where {D,N,U<:Real}
-    _checkvarsize(d, x)
-    all(xi -> insupport(StandardDist{D}(), xi), x)
-end
-
 for f in (
     :(Base.minimum),
     :(Base.maximum),
@@ -104,6 +98,7 @@ function Distributions.insupport(d::StandardDist{D,N}, x::AbstractArray{<:Real,N
     _checkvarsize(d, x)
     all(Base.Fix1(insupport, StandardDist{D}()), x)
 end
+
 
 @inline Distributions.logpdf(d::StandardDist{D,0}, x::U) where {D,U} = logpdf(nonstddist(d), x)
 

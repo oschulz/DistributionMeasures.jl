@@ -1,4 +1,4 @@
-# This file is a part of BAT.jl, licensed under the MIT License (MIT).
+# This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
 """
     const StandardNormal = StandardDist{Normal,0}
@@ -43,14 +43,14 @@ Distributions.pdf(d::StandardDist{Normal,0}, x::U) where {U<:Real} = invsqrt2π 
 
 @inline Distributions.gradlogpdf(d::StandardDist{Normal,0}, x::Real) = -x
 
-@inline Distributions.logcdf(d::StandardDist{Normal,<:Real,0}, x::Real) = StatsFuns.normlogcdf(x)
-@inline Distributions.cdf(d::StandardDist{Normal,<:Real,0}, x::Real) = StatsFuns.normcdf(x)
-@inline Distributions.logccdf(d::StandardDist{Normal,<:Real,0}, x::Real) = StatsFuns.normlogccdf(x)
-@inline Distributions.ccdf(d::StandardDist{Normal,<:Real,0}, x::Real) = StatsFuns.normccdf(x)
-@inline Distributions.quantile(d::StandardDist{Normal,<:Real,0}, p::Real) = StatsFuns.norminvcdf(p)
-@inline Distributions.cquantile(d::StandardDist{Normal,<:Real,0}, p::Real) = StatsFuns.norminvccdf(p)
-@inline Distributions.invlogcdf(d::StandardDist{Normal,<:Real,0}, p::Real) = StatsFuns.norminvlogcdf(p)
-@inline Distributions.invlogccdf(d::StandardDist{Normal,<:Real,0}, p::Real) = StatsFuns.norminvlogccdf(p)
+@inline Distributions.logcdf(d::StandardDist{Normal,0}, x::Real) = StatsFuns.normlogcdf(x)
+@inline Distributions.cdf(d::StandardDist{Normal,0}, x::Real) = StatsFuns.normcdf(x)
+@inline Distributions.logccdf(d::StandardDist{Normal,0}, x::Real) = StatsFuns.normlogccdf(x)
+@inline Distributions.ccdf(d::StandardDist{Normal,0}, x::Real) = StatsFuns.normccdf(x)
+@inline Distributions.quantile(d::StandardDist{Normal,0}, p::Real) = StatsFuns.norminvcdf(p)
+@inline Distributions.cquantile(d::StandardDist{Normal,0}, p::Real) = StatsFuns.norminvccdf(p)
+@inline Distributions.invlogcdf(d::StandardDist{Normal,0}, p::Real) = StatsFuns.norminvlogcdf(p)
+@inline Distributions.invlogccdf(d::StandardDist{Normal,0}, p::Real) = StatsFuns.norminvlogccdf(p)
 
 Base.rand(rng::AbstractRNG, d::StandardDist{Normal,N}) where N = randn(rng, size(d)...)
 
