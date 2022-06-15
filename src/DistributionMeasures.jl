@@ -15,7 +15,6 @@ using Distributions: Distribution, VariateForm, ValueSupport
 using Distributions: Univariate, Multivariate, ArrayLikeVariate, Continuous, Discrete
 using Distributions: Uniform, Normal, MvNormal
 using Distributions: ReshapedDistribution
-using Distributions: pdf, logpdf, gradlogpdf, cdf, logcdf, quantile
 
 import Statistics
 import StatsBase
