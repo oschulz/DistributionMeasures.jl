@@ -1,6 +1,6 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-using DistributionsMeasures
+using DistributionMeasures
 using Test
 
 using Random, Statistics, LinearAlgebra
@@ -37,7 +37,7 @@ import ForwardDiff
             d = StandardDist{D}(sz...)
 
             if size(d) == ()
-                @test @inferred(DistributionsMeasures.nonstddist(d)) == dref
+                @test @inferred(DistributionMeasures.nonstddist(d)) == dref
             end
 
             @test @inferred(length(d)) == length(dref)
