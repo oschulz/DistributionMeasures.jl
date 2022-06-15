@@ -15,6 +15,12 @@ using Distributions: Distribution, VariateForm, ValueSupport
 using Distributions: ArrayLikeVariate, Continuous, Discrete
 using Distributions: ReshapedDistribution
 
+import ChainRules
+using ChainRulesCore: ZeroTangent, NoTangent, unthunk, @thunk
+
+using ForwardDiff: Dual
+using ForwardDiffPullbacks: fwddiff
+
 import Functors
 using Functors: fmap
 
