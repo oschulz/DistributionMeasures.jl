@@ -48,7 +48,6 @@ const MeasureLike = Union{AbstractMeasure,Distribution}
 export MeasureLike
 
 include("utils.jl")
-include("type_utils.jl")
 include("autodiff_utils.jl")
 include("standard_dist.jl")
 include("standard_uniform.jl")

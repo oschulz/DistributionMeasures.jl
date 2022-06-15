@@ -124,7 +124,7 @@ import ForwardDiff
         # TODO: Add @inferred
         d = StandardDist{Normal}(4)
         d_uv = StandardDist{Normal}()
-        dref = MvNormal(fill(1.0, 4))
+        dref = MvNormal(Diagonal(fill(1.0, 4)))
         @test (MvNormal(d)) == dref
         @test (Base.convert(MvNormal, d)) == dref
     end

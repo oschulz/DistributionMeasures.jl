@@ -51,22 +51,22 @@ end
 @inline MeasureBase.rootmeasure(m::DistributionMeasure) = MeasureBase.basemeasure(m)
 
 
-Base.rand(rng::AbstractRNG, ::Type{T}, m::DistributionMeasure) where {T<:Real} = _convert_numtype(T, rand(m.d))
+Base.rand(rng::AbstractRNG, ::Type{T}, m::DistributionMeasure) where {T<:Real} = convert_realtype(T, rand(m.d))
 
 function _flat_powrand(rng::AbstractRNG, ::Type{T}, d::Distribution{<:ArrayLikeVariate{0}}, sz::Dims) where {T<:Real}
-    _convert_numtype(T, reshape(rand(d, prod(sz)), sz...))
+    convert_realtype(T, reshape(rand(d, prod(sz)), sz...))
 end
 
 function _flat_powrand(rng::AbstractRNG, ::Type{T}, d::Distribution{<:ArrayLikeVariate{1}}, sz::Dims) where {T<:Real}
-    _convert_numtype(T, reshape(rand(d, prod(sz)), size(d)..., sz...))
+    convert_realtype(T, reshape(rand(d, prod(sz)), size(d)..., sz...))
 end
 
 function _flat_powrand(rng::AbstractRNG, ::Type{T}, d::ReshapedDistribution{N,<:Any,<:Distribution{<:ArrayLikeVariate{1}}}, sz::Dims) where {T<:Real,N}
-    _convert_numtype(T, reshape(rand(d.dist, prod(sz)), d.dims..., sz...))
+    convert_realtype(T, reshape(rand(d.dist, prod(sz)), d.dims..., sz...))
 end
 
 function _flat_powrand(rng::AbstractRNG, ::Type{T}, d::Distribution, sz::Dims) where {T<:Real,N}
-    flatview(ArrayOfSimilarArrays(_convert_numtype(T, rand(d, sz))))
+    flatview(ArrayOfSimilarArrays(convert_realtype(T, rand(d, sz))))
 end
 
 function Base.rand(rng::AbstractRNG, ::Type{T}, m::PowerMeasure{<:DistributionMeasure{<:ArrayLikeVariate{0}}, NTuple{N,Base.OneTo{Int}}}) where {T<:Real,N}
