@@ -1,6 +1,6 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-using VariateTransformations
+using DistributionMeasures
 using Test
 
 using Random, Statistics, LinearAlgebra
@@ -14,13 +14,13 @@ using ForwardDiff
     stblrng() = StableRNG(789990641)
 
     @testset "StandardUvUniform" begin
-        @test @inferred(VariateTransformations.StandardUvUniform()) isa VariateTransformations.StandardUvUniform
+        @test @inferred(DistributionMeasures.StandardUvUniform()) isa DistributionMeasures.StandardUvUniform
 
-        @test @inferred(Uniform(VariateTransformations.StandardUvUniform())) isa Uniform{Float64}
-        @test @inferred(Uniform(VariateTransformations.StandardUvUniform())) == Uniform()
-        @test @inferred(convert(Uniform, VariateTransformations.StandardUvUniform())) == Uniform()
+        @test @inferred(Uniform(DistributionMeasures.StandardUvUniform())) isa Uniform{Float64}
+        @test @inferred(Uniform(DistributionMeasures.StandardUvUniform())) == Uniform()
+        @test @inferred(convert(Uniform, DistributionMeasures.StandardUvUniform())) == Uniform()
 
-        d = VariateTransformations.StandardUvUniform()
+        d = DistributionMeasures.StandardUvUniform()
         dref = Uniform()
 
         @test @inferred(minimum(d)) == minimum(dref)
@@ -72,22 +72,22 @@ using ForwardDiff
         @test @inferred(rand(stblrng(), d)) == rand(stblrng(), d)
         @test @inferred(rand(stblrng(), d, 5)) == rand(stblrng(), d, 5)
 
-        @test @inferred(truncated(VariateTransformations.StandardUvUniform(), -0.5f0, 0.7f0)) isa Uniform{Float64}
-        @test truncated(VariateTransformations.StandardUvUniform(), -0.5f0, 0.7f0) == Uniform(0.0f0, 0.7f0)
-        @test truncated(VariateTransformations.StandardUvUniform(), 0.2f0, 0.7f0) == Uniform(0.2f0, 0.7f0)
+        @test @inferred(truncated(DistributionMeasures.StandardUvUniform(), -0.5f0, 0.7f0)) isa Uniform{Float64}
+        @test truncated(DistributionMeasures.StandardUvUniform(), -0.5f0, 0.7f0) == Uniform(0.0f0, 0.7f0)
+        @test truncated(DistributionMeasures.StandardUvUniform(), 0.2f0, 0.7f0) == Uniform(0.2f0, 0.7f0)
 
-        @test @inferred(product_distribution(fill(VariateTransformations.StandardUvUniform(), 3))) isa VariateTransformations.StandardDist{Uniform,1}
-        @test product_distribution(fill(VariateTransformations.StandardUvUniform(), 3)) == VariateTransformations.StandardDist{Uniform,1}(3)
+        @test @inferred(product_distribution(fill(DistributionMeasures.StandardUvUniform(), 3))) isa DistributionMeasures.StandardDist{Uniform,1}
+        @test product_distribution(fill(DistributionMeasures.StandardUvUniform(), 3)) == DistributionMeasures.StandardDist{Uniform,1}(3)
     end
 
 
     @testset "StandardDist{Uniform,1}" begin
-        @test @inferred(VariateTransformations.StandardDist{Uniform,1}(3)) isa VariateTransformations.StandardDist{Uniform,1}
+        @test @inferred(DistributionMeasures.StandardDist{Uniform,1}(3)) isa DistributionMeasures.StandardDist{Uniform,1}
         
-        @test @inferred(Distributions.Product(VariateTransformations.StandardDist{Uniform,1}(3))) isa Distributions.Product{Continuous,VariateTransformations.StandardUvUniform}
-        @test @inferred(convert(Product, VariateTransformations.StandardDist{Uniform,1}(3))) == Distributions.Product(Fill(VariateTransformations.StandardUvUniform(), 3))
+        @test @inferred(Distributions.Product(DistributionMeasures.StandardDist{Uniform,1}(3))) isa Distributions.Product{Continuous,DistributionMeasures.StandardUvUniform}
+        @test @inferred(convert(Product, DistributionMeasures.StandardDist{Uniform,1}(3))) == Distributions.Product(Fill(DistributionMeasures.StandardUvUniform(), 3))
 
-        d = VariateTransformations.StandardDist{Uniform,1}(3)
+        d = DistributionMeasures.StandardDist{Uniform,1}(3)
         dref = product_distribution(fill(Uniform(), 3))
 
         @test @inferred(eltype(typeof(d))) == eltype(typeof(dref))
@@ -96,11 +96,11 @@ using ForwardDiff
         @test @inferred(length(d)) == length(dref)
         @test @inferred(size(d)) == size(dref)
 
-        @test @inferred(view(VariateTransformations.StandardDist{Uniform,1}(7), 3)) isa VariateTransformations.StandardUvUniform
-        @test_throws BoundsError view(VariateTransformations.StandardDist{Uniform,1}(7), 9)
-        @test @inferred(view(VariateTransformations.StandardDist{Uniform,1}(7), 2:4)) isa VariateTransformations.StandardDist{Uniform,1}
-        @test view(VariateTransformations.StandardDist{Uniform,1}(7), 2:4) == VariateTransformations.StandardDist{Uniform,1}(3)
-        @test_throws BoundsError view(VariateTransformations.StandardDist{Uniform,1}(7), 2:8)
+        @test @inferred(view(DistributionMeasures.StandardDist{Uniform,1}(7), 3)) isa DistributionMeasures.StandardUvUniform
+        @test_throws BoundsError view(DistributionMeasures.StandardDist{Uniform,1}(7), 9)
+        @test @inferred(view(DistributionMeasures.StandardDist{Uniform,1}(7), 2:4)) isa DistributionMeasures.StandardDist{Uniform,1}
+        @test view(DistributionMeasures.StandardDist{Uniform,1}(7), 2:4) == DistributionMeasures.StandardDist{Uniform,1}(3)
+        @test_throws BoundsError view(DistributionMeasures.StandardDist{Uniform,1}(7), 2:8)
         
         @test @inferred(mean(d)) == mean(dref)
         @test @inferred(var(d)) == var(dref)

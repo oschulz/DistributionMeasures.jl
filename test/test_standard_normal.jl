@@ -1,6 +1,6 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-using VariateTransformations
+using DistributionMeasures
 using Test
 
 using Random, Statistics, LinearAlgebra
@@ -12,11 +12,11 @@ using StableRNGs
     stblrng() = StableRNG(789990641)
 
     @testset "StandardUvNormal" begin
-        @test @inferred(Normal(VariateTransformations.StandardUvNormal())) isa Normal{Float64}
-        @test @inferred(Normal(VariateTransformations.StandardUvNormal())) == Normal()
-        @test @inferred(convert(Normal, VariateTransformations.StandardUvNormal())) == Normal()
+        @test @inferred(Normal(DistributionMeasures.StandardUvNormal())) isa Normal{Float64}
+        @test @inferred(Normal(DistributionMeasures.StandardUvNormal())) == Normal()
+        @test @inferred(convert(Normal, DistributionMeasures.StandardUvNormal())) == Normal()
 
-        d = VariateTransformations.StandardUvNormal()
+        d = DistributionMeasures.StandardUvNormal()
         dref = Normal()
 
         @test @inferred(minimum(d)) == minimum(dref)
@@ -70,29 +70,29 @@ using StableRNGs
         @test @inferred(rand(stblrng(), d)) == rand(stblrng(), d)
         @test @inferred(rand(stblrng(), d, 5)) == rand(stblrng(), d, 5)
 
-        @test @inferred(truncated(VariateTransformations.StandardUvNormal(), -2.2f0, 3.1f0)) isa Truncated{Normal{Float64}}
-        @test truncated(VariateTransformations.StandardUvNormal(), -2.2f0, 3.1f0) == truncated(Normal(0.0f0, 1.0f0), -2.2f0, 3.1f0)
+        @test @inferred(truncated(DistributionMeasures.StandardUvNormal(), -2.2f0, 3.1f0)) isa Truncated{Normal{Float64}}
+        @test truncated(DistributionMeasures.StandardUvNormal(), -2.2f0, 3.1f0) == truncated(Normal(0.0f0, 1.0f0), -2.2f0, 3.1f0)
 
-        @test @inferred(product_distribution(fill(VariateTransformations.StandardUvNormal(), 3))) isa VariateTransformations.StandardDist{Normal,1}
-        @test product_distribution(fill(VariateTransformations.StandardUvNormal(), 3)) == VariateTransformations.StandardDist{Normal,1}(3)
+        @test @inferred(product_distribution(fill(DistributionMeasures.StandardUvNormal(), 3))) isa DistributionMeasures.StandardDist{Normal,1}
+        @test product_distribution(fill(DistributionMeasures.StandardUvNormal(), 3)) == DistributionMeasures.StandardDist{Normal,1}(3)
     end
 
 
     @testset "StandardDist{Normal,1}" begin
-        @test @inferred(VariateTransformations.StandardDist{Normal,1}(3)) isa VariateTransformations.StandardDist{Normal,1}
-        @test @inferred(VariateTransformations.StandardDist{Normal,1}(3)) isa VariateTransformations.StandardDist{Normal,1}
-        @test @inferred(VariateTransformations.StandardDist{Normal,1}(3)) isa VariateTransformations.StandardDist{Normal,1}
+        @test @inferred(DistributionMeasures.StandardDist{Normal,1}(3)) isa DistributionMeasures.StandardDist{Normal,1}
+        @test @inferred(DistributionMeasures.StandardDist{Normal,1}(3)) isa DistributionMeasures.StandardDist{Normal,1}
+        @test @inferred(DistributionMeasures.StandardDist{Normal,1}(3)) isa DistributionMeasures.StandardDist{Normal,1}
 
-        @test @inferred(Distributions.Product(VariateTransformations.StandardDist{Normal,1}(3))) isa Distributions.Product{Continuous,VariateTransformations.StandardUvNormal}
-        @test @inferred(Distributions.Product(VariateTransformations.StandardDist{Normal,1}(3))) isa Distributions.Product{Continuous,VariateTransformations.StandardUvNormal}
-        @test @inferred(Distributions.Product(VariateTransformations.StandardDist{Normal,1}(3))) == Distributions.Product(Fill(VariateTransformations.StandardUvNormal(), 3))
-        @test @inferred(convert(Product, VariateTransformations.StandardDist{Normal,1}(3))) == Distributions.Product(Fill(VariateTransformations.StandardUvNormal(), 3))
+        @test @inferred(Distributions.Product(DistributionMeasures.StandardDist{Normal,1}(3))) isa Distributions.Product{Continuous,DistributionMeasures.StandardUvNormal}
+        @test @inferred(Distributions.Product(DistributionMeasures.StandardDist{Normal,1}(3))) isa Distributions.Product{Continuous,DistributionMeasures.StandardUvNormal}
+        @test @inferred(Distributions.Product(DistributionMeasures.StandardDist{Normal,1}(3))) == Distributions.Product(Fill(DistributionMeasures.StandardUvNormal(), 3))
+        @test @inferred(convert(Product, DistributionMeasures.StandardDist{Normal,1}(3))) == Distributions.Product(Fill(DistributionMeasures.StandardUvNormal(), 3))
 
-        @test @inferred(MvNormal(VariateTransformations.StandardDist{Normal,1}(3))) isa MvNormal{Float64}
-        @test @inferred(MvNormal(VariateTransformations.StandardDist{Normal,1}(3))) == MvNormal(ScalMat(3, 1.0))
-        @test @inferred(convert(MvNormal, VariateTransformations.StandardDist{Normal,1}(3))) == MvNormal(ScalMat(3, 1.0))
+        @test @inferred(MvNormal(DistributionMeasures.StandardDist{Normal,1}(3))) isa MvNormal{Float64}
+        @test @inferred(MvNormal(DistributionMeasures.StandardDist{Normal,1}(3))) == MvNormal(ScalMat(3, 1.0))
+        @test @inferred(convert(MvNormal, DistributionMeasures.StandardDist{Normal,1}(3))) == MvNormal(ScalMat(3, 1.0))
 
-        d = VariateTransformations.StandardDist{Normal,1}(3)
+        d = DistributionMeasures.StandardDist{Normal,1}(3)
         dref = MvNormal(ScalMat(3, 1.0))
 
         @test @inferred(eltype(typeof(d))) == eltype(typeof(dref))
@@ -101,11 +101,11 @@ using StableRNGs
         @test @inferred(length(d)) == length(dref)
         @test @inferred(size(d)) == size(dref)
 
-        @test @inferred(view(VariateTransformations.StandardDist{Normal,1}(7), 3)) isa VariateTransformations.StandardUvNormal
-        @test_throws BoundsError view(VariateTransformations.StandardDist{Normal,1}(7), 9)
-        @test @inferred(view(VariateTransformations.StandardDist{Normal,1}(7), 2:4)) isa VariateTransformations.StandardDist{Normal,1}
-        @test view(VariateTransformations.StandardDist{Normal,1}(7), 2:4) == VariateTransformations.StandardDist{Normal,1}(3)
-        @test_throws BoundsError view(VariateTransformations.StandardDist{Normal,1}(7), 2:8)
+        @test @inferred(view(DistributionMeasures.StandardDist{Normal,1}(7), 3)) isa DistributionMeasures.StandardUvNormal
+        @test_throws BoundsError view(DistributionMeasures.StandardDist{Normal,1}(7), 9)
+        @test @inferred(view(DistributionMeasures.StandardDist{Normal,1}(7), 2:4)) isa DistributionMeasures.StandardDist{Normal,1}
+        @test view(DistributionMeasures.StandardDist{Normal,1}(7), 2:4) == DistributionMeasures.StandardDist{Normal,1}(3)
+        @test_throws BoundsError view(DistributionMeasures.StandardDist{Normal,1}(7), 2:8)
         
         @test @inferred(params(d)) == params(dref)
         @test @inferred(partype(d)) == partype(dref)
