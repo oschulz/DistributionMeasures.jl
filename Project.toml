@@ -4,6 +4,7 @@ authors = ["Chad Scherrer <chad.scherrer@gmail.com> and contributors"]
 version = "0.1.0"
 
 [deps]
+ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
 ArraysOfArrays = "65a8f2f4-9b39-5baf-92e2-a9cc46fdf018"
 ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
 ChangesOfVariables = "9e997f8a-9a97-42d5-a9f1-ce6bfc15e2c0"
@@ -24,6 +25,7 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 StatsFuns = "4c63d2b9-4356-54db-8cca-17b64c39e42c"
 
 [compat]
+ArgCheck = "1, 2"
 ArraysOfArrays = "0.5"
 ChainRulesCore = "1"
 ChangesOfVariables = "0.1"

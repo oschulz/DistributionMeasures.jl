@@ -12,10 +12,11 @@ using DensityInterface: logdensityof
 
 import MeasureBase
 using MeasureBase: AbstractMeasure, Lebesgue, Counting
+using MeasureBase: StdMeasure, StdNormal, StdUniform, StdExponential
 using MeasureBase: PowerMeasure
 
 import Distributions
-using Distributions: Distribution, VariateForm, ValueSupport
+using Distributions: Distribution, VariateForm, ValueSupport, ContinuousDistribution
 using Distributions: Univariate, Multivariate, ArrayLikeVariate, Continuous, Discrete
 using Distributions: Uniform, Normal, MvNormal
 using Distributions: ReshapedDistribution
@@ -32,7 +33,7 @@ using FillArrays: Fill, Ones, Zeros
 import ChainRulesCore
 using ChainRulesCore: ZeroTangent, NoTangent, unthunk, @thunk
 
-using ForwardDiff: Dual
+import ForwardDiff
 using ForwardDiffPullbacks: fwddiff
 
 import Functors
