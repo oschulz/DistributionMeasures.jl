@@ -39,6 +39,8 @@ using ForwardDiffPullbacks: fwddiff
 import Functors
 using Functors: fmap
 
+using ArgCheck: @argcheck
+
 using ArraysOfArrays: ArrayOfSimilarArrays, flatview
 
 const MeasureLike = Union{AbstractMeasure,Distribution}
