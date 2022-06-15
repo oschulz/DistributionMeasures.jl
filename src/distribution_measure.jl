@@ -1,6 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-
 @inline MeasureBase.insupport(d::Distribution) = Distributions.insuinsupportpport(d)
 @inline MeasureBase.paramnames(d::Distribution) = propertynames(d)
 @inline MeasureBase.params(d::Distribution) = NamedTuple{MeasureBase.paramnames(m.d)}(Distributions.params(d))

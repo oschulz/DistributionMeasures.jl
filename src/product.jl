@@ -1,6 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-
 MeasureBase.getdof(d::Distributions.Product) = length(d)
 
 function _product_dist_trafo_impl(trgs, srcs, x)

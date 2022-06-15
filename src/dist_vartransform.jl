@@ -1,6 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-
 const StdDistribution = StandardDist{<:Union{Uniform,Normal},0}
 const AnyStdUv = Union{StdMeasure,StdDistribution}
 

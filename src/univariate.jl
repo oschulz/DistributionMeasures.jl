@@ -1,6 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-
 @inline MeasureBase.getdof(::Distribution{Univariate}) = 1
 
 

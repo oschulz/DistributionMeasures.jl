@@ -1,3 +1,5 @@
+# This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
+
 @inline _convert_numtype(::Type{T}, x::T) where {T<:Real} = x
 @inline _convert_numtype(::Type{T}, x::AbstractArray{T}) where {T<:Real} = x
 @inline _convert_numtype(::Type{T}, x::U) where {T<:Real,U<:Real} = T(X)

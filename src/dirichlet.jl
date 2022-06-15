@@ -1,6 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-
 MeasureBase.getdof(d::Dirichlet) = length(d) - 1
 
 MeasureBase.vartransform_origin(trg::Dirichlet) = StandardDist{Uniform,1}(getdof(trg))

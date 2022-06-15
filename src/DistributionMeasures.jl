@@ -1,3 +1,5 @@
+# This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
+
 module DistributionMeasures
 
 using LinearAlgebra: Diagonal, dot

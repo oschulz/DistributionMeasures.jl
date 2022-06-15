@@ -1,6 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-
 @inline _adignore_call(f) = f()
 @inline _adignore_call_pullback(@nospecialize ΔΩ) = (NoTangent(), NoTangent())
 ChainRulesCore.rrule(::typeof(_adignore_call), f) = _adignore_call(f), _adignore_call_pullback

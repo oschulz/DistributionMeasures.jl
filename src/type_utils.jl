@@ -1,6 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-
 """
     DistributionMeasures.firsttype(::Type{T}, ::Type{U}) where {T<:Real,U<:Real}
 
