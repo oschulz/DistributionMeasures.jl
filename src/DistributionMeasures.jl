@@ -19,6 +19,7 @@ using Distributions: ReshapedDistribution
 import Statistics
 import StatsBase
 import StatsFuns
+import PDMats
 
 using IrrationalConstants: log2π, invsqrt2π
 
