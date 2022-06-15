@@ -22,7 +22,7 @@ using StableRNGs
         @test @inferred(minimum(d)) == minimum(dref)
         @test @inferred(maximum(d)) == maximum(dref)
         
-        @test @inferred(params(d)) == params(dref)
+        @test @inferred(Distributions.params(d)) == Distributions.params(dref)
         @test @inferred(partype(d)) == partype(dref)
         
         @test @inferred(location(d)) == location(dref)
@@ -107,7 +107,7 @@ using StableRNGs
         @test view(DistributionMeasures.StandardDist{Normal,1}(7), 2:4) == DistributionMeasures.StandardDist{Normal,1}(3)
         @test_throws BoundsError view(DistributionMeasures.StandardDist{Normal,1}(7), 2:8)
         
-        @test @inferred(params(d)) == params(dref)
+        @test @inferred(Distributions.params(d)) == Distributions.params(dref)
         @test @inferred(partype(d)) == partype(dref)
         
         @test @inferred(mean(d)) == mean(dref)
@@ -123,7 +123,7 @@ using StableRNGs
         @test @inferred(entropy(d)) == entropy(dref)
 
         for x in fill.([-Inf, -1.3, 0.0, 1.3, +Inf], 3)
-            @test @inferred(insupport(d, x)) == insupport(dref, x)
+            @test @inferred(Distributions.insupport(d, x)) == Distributions.insupport(dref, x)
             @test @inferred(logpdf(d, x)) == logpdf(dref, x)
             @test @inferred(pdf(d, x)) == pdf(dref, x)
             @test @inferred(sqmahal(d, x)) == sqmahal(dref, x)

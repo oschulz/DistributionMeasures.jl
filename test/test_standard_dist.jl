@@ -46,7 +46,7 @@ import ForwardDiff
             @test @inferred(eltype(typeof(d))) == eltype(typeof(dref))
             @test @inferred(eltype(d)) == eltype(dref)
 
-            @test @inferred(params(d)) == ()
+            @test @inferred(Distributions.params(d)) == ()
             @test @inferred(partype(d)) == partype(dref)
 
             for f in [minimum, maximum, mean, median, mode, modes, var, std, skewness, kurtosis, location, scale, entropy]

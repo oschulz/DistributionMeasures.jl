@@ -31,7 +31,7 @@ function Base.show(io::IO, d::StandardDist{D}) where {D}
 end
 
 
-@inline nonstddist(d::StandardDist{D,0}) where {D} = D(params(D())...)
+@inline nonstddist(d::StandardDist{D,0}) where {D} = D(Distributions.params(D())...)
 
 
 (::Type{D}, d::StandardDist{D,0}) where {D<:Distribution{Univariate,Continuous}} = nonstddist(d)
@@ -88,15 +88,15 @@ Statistics.cov(d::StandardDist{D,1}) where {D} = Diagonal(var(d))
 Distributions.invcov(d::StandardDist{D,1}) where {D} = Diagonal(Fill(inv(var(StandardDist{D}())), length(d)))
 Distributions.logdetcov(d::StandardDist{D,1}) where {D} = log(var(StandardDist{D}())) + length(d)
 
-StatsBase.entropy(d::StandardDist{D,0}) where {D} = entropy(nonstddist(d))
-StatsBase.entropy(d::StandardDist{D,N}) where {D,N} = length(d) * entropy(StandardDist{D}())
+StatsBase.entropy(d::StandardDist{D,0}) where {D} = StatsBase.entropy(nonstddist(d))
+StatsBase.entropy(d::StandardDist{D,N}) where {D,N} = length(d) * StatsBase.entropy(StandardDist{D}())
 
 
-Distributions.insupport(d::StandardDist{D,0}, x::Real) where {D} = insupport(nonstddist(d), x)
+Distributions.insupport(d::StandardDist{D,0}, x::Real) where {D} = Distributions.insupport(nonstddist(d), x)
 
 function Distributions.insupport(d::StandardDist{D,N}, x::AbstractArray{<:Real,N}) where {D,N}
     _checkvarsize(d, x)
-    all(Base.Fix1(insupport, StandardDist{D}()), x)
+    all(Base.Fix1(Distributions.insupport, StandardDist{D}()), x)
 end
 
 

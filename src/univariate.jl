@@ -87,14 +87,14 @@ end
 
 
 @inline function _result_numtype(d::Distribution{Univariate}, x::T) where {T<:Real}
-    # float(promote_type(T, eltype(params(d))))
-    firsttype(first(typeof(x), promote_type(map(eltype, params(d))...)))
+    # float(promote_type(T, eltype(Distributions.params(d))))
+    firsttype(first(typeof(x), promote_type(map(eltype, Distributions.params(d))...)))
 end
 
 
 @inline function MeasureBase.to_origin(src::Distribution{Univariate,Continuous}, x<:Real)
     R = _result_numtype(src, x)
-    if insupport(src, x)
+    if Distributions.insupport(src, x)
         y = _trafo_cdf(src, x)
         convert(R, y)
     else

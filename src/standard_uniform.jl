@@ -28,19 +28,19 @@ StatsBase.entropy(d::StandardDist{Uniform,0}) = 0
 
 
 function Distributions.logpdf(d::StandardDist{Uniform,0}, x::U) where {U<:Real}
-    ifelse(insupport(d, x), U(0), U(-Inf))
+    ifelse(Distributions.insupport(d, x), U(0), U(-Inf))
 end
 
 function Distributions.pdf(d::StandardDist{Uniform,0}, x::U) where {U<:Real}
-    ifelse(insupport(d, x), one(U), zero(U))
+    ifelse(Distributions.insupport(d, x), one(U), zero(U))
 end
 
 function Distributions._logpdf(d::StandardDist{Uniform,N}, x::AbstractVector{U}) where {N,U<:Real}
-    ifelse(insupport(d, x), U(0), U(-Inf))
+    ifelse(Distributions.insupport(d, x), U(0), U(-Inf))
 end
 
 function Distributions._pdf(d::StandardDist{Uniform,N}, x::AbstractVector{U}) where {N,U<:Real}
-    ifelse(insupport(d, x), one(U), zero(U))
+    ifelse(Distributions.insupport(d, x), one(U), zero(U))
 end
 
 
