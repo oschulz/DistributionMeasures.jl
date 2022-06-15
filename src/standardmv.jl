@@ -13,7 +13,7 @@ end
 end
 
 
-MeasureBase.effndof(d::MvNormal) = length(d)
+MeasureBase.getdof(d::MvNormal) = length(d)
 
 MeasureBase.vartransform_origin(mu::MvNormal) = StandardDist{Normal,1}(length(mu))
 

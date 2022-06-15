@@ -1,10 +1,10 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
 
-@inline MeasureBase.effndof(::Distribution{Univariate}) = 1
+@inline MeasureBase.getdof(::Distribution{Univariate}) = 1
 
 
-@inline MeasureBase.require_same_effndof(a::Distribution{Univariate}, b::Distribution{Univariate}) = nothing
+@inline MeasureBase.check_dof(a::Distribution{Univariate}, b::Distribution{Univariate}) = nothing
 
 @inline MeasureBase.vartransform_origin(d::Distribution{Univariate,Continuous}) = StandardUniform()
 

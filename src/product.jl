@@ -1,7 +1,7 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
 
-MeasureBase.effndof(d::Distributions.Product) = length(d)
+MeasureBase.getdof(d::Distributions.Product) = length(d)
 
 function _product_dist_trafo_impl(trgs, srcs, x)
     _check_arraylike_match(trg, src, x)

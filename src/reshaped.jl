@@ -1,7 +1,7 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
 
-MeasureBase.effndof(d::ReshapedDistribution) = MeasureBase.effndof(d.dist)
+MeasureBase.getdof(d::ReshapedDistribution) = MeasureBase.getdof(d.dist)
 
 MeasureBase.vartransform_origin(d::ReshapedDistribution) = d.dist
 

@@ -19,7 +19,7 @@ std_univariate(::StandardDist{D}) where D = D()
 
 
 _matching_stddist(::Type{D}, d::Distribution{Univariate,Continuous}) where {D<:Union{StandardUniform,StandardNormal}} = StandardDist{T}()
-_matching_stddist(::Type{D}, d::ContinuousDistribution) where {D<:Union{StandardUniform,StandardNormal}} = StandardDist{T}(effndof(d))
+_matching_stddist(::Type{D}, d::ContinuousDistribution) where {D<:Union{StandardUniform,StandardNormal}} = StandardDist{T}(getdof(d))
 
 MeasureBase.vartransform(::Type{D}, ::MeasureLike) where {D<:Union{StandardUniform,StandardNormal}} = vartransform(_matching_stddist(D,d), d)
 MeasureBase.vartransform(::MeasureLike, ::Type{D}) where {D<:Union{StandardUniform,StandardNormal}} = vartransform(_matching_stddist(D,d), d)

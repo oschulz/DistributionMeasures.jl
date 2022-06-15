@@ -1,9 +1,9 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
 
-MeasureBase.effndof(d::Dirichlet) = length(d) - 1
+MeasureBase.getdof(d::Dirichlet) = length(d) - 1
 
-MeasureBase.vartransform_origin(trg::Dirichlet) = StandardDist{Uniform,1}(effndof(trg))
+MeasureBase.vartransform_origin(trg::Dirichlet) = StandardDist{Uniform,1}(getdof(trg))
 
 function MeasureBase.from_origin(trg::Dirichlet, x::AbstractVector{<:Real})
     to_dirichlet(trg.alpha, src, x)
