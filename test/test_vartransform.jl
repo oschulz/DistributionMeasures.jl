@@ -9,37 +9,37 @@ using Distributions, ArraysOfArrays
 import ForwardDiff, Zygote
 
 @testset "test_distribution_transform" begin
-    function test_back_and_forth(trg_d, src_d)
-        @testset "transform $(typeof(trg_d).name) <-> $(typeof(src_d).name)" begin
-            src_v = rand(src_d)
-            trg_v = BAT.apply_dist_trafo(trg_d, src_d, src_v)
-            src_v_reco = BAT.apply_dist_trafo(src_d, trg_d, trg_v)
+    function test_back_and_forth(trg, src)
+        @testset "transform $(typeof(trg).name) <-> $(typeof(src).name)" begin
+            x = rand(src)
+            y = vartransform_def(trg, src, x)
+            src_v_reco = vartransform_def(src, trg, y)
 
-            @test src_v ≈ src_v_reco
+            @test x ≈ src_v_reco
 
-            let vs_trg = varshape(trg_d), vs_src = varshape(src_d)
-                f = unshaped_x -> inverse(vs_trg)(BAT.apply_dist_trafo(trg_d, src_d, vs_src(unshaped_x)))
-                ref_ladj = logpdf(src_d, src_v) - logpdf(trg_d, trg_v)
-                @test ref_ladj ≈ logabsdet(ForwardDiff.jacobian(f, inverse(vs_src)(src_v)))[1]
+            let vs_trg = varshape(trg), vs_src = varshape(src)
+                f = unshaped_x -> inverse(vs_trg)(vartransform_def(trg, src, vs_src(unshaped_x)))
+                ref_ladj = logpdf(src, x) - logpdf(trg, y)
+                @test ref_ladj ≈ logabsdet(ForwardDiff.jacobian(f, inverse(vs_src)(x)))[1]
             end
         end
     end
 
-    function get_trgxs(trg_d, src_d, X)
-        return (x -> BAT.apply_dist_trafo(trg_d, src_d, x)).(nestedview(X))
+    function get_trgxs(trg, src, X)
+        return (x -> vartransform_def(trg, src, x)).(nestedview(X))
     end
 
-    function get_trgxs(trg_d, src_d::Distribution{Univariate}, X)
-        return (x -> BAT.apply_dist_trafo(trg_d, src_d, x)).(X)
+    function get_trgxs(trg, src::Distribution{Univariate}, X)
+        return (x -> vartransform_def(trg, src, x)).(X)
     end
 
-    function test_dist_trafo_moments(trg_d, src_d)
-        @testset "check moments of trafo $(typeof(trg_d).name) <- $(typeof(src_d).name)" begin
-            X = flatview(rand(src_d, 10^5))
-            trgxs = get_trgxs(trg_d, src_d, X)
-            unshaped_trgxs = broadcast(unshaped, trgxs, Ref(varshape(trg_d)))
-            @test isapprox(mean(unshaped_trgxs), mean(unshaped(trg_d)), atol = 0.1)
-            @test isapprox(cov(unshaped_trgxs), cov(unshaped(trg_d)), rtol = 0.1)
+    function test_dist_trafo_moments(trg, src)
+        @testset "check moments of trafo $(typeof(trg).name) <- $(typeof(src).name)" begin
+            X = flatview(rand(src, 10^5))
+            trgxs = get_trgxs(trg, src, X)
+            unshaped_trgxs = broadcast(unshaped, trgxs, Ref(varshape(trg)))
+            @test isapprox(mean(unshaped_trgxs), mean(unshaped(trg)), atol = 0.1)
+            @test isapprox(cov(unshaped_trgxs), cov(unshaped(trg)), rtol = 0.1)
         end
     end
 
@@ -113,25 +113,25 @@ import ForwardDiff, Zygote
         mvuni = product_distribution([Uniform(), Uniform()])
 
         x = rand()
-        @test_throws ArgumentError BAT.apply_dist_trafo(stduvnorm, mvnorm, x)
-        @test_throws ArgumentError BAT.apply_dist_trafo(stduvnorm, stdmvnorm1, x)
-        @test_throws ArgumentError BAT.apply_dist_trafo(stduvnorm, stdmvnorm2, x)
+        @test_throws ArgumentError vartransform_def(stduvnorm, mvnorm, x)
+        @test_throws ArgumentError vartransform_def(stduvnorm, stdmvnorm1, x)
+        @test_throws ArgumentError vartransform_def(stduvnorm, stdmvnorm2, x)
 
         x = rand(2)
-        @test_throws ArgumentError BAT.apply_dist_trafo(mvuni, mvnorm, x)
-        @test_throws ArgumentError BAT.apply_dist_trafo(mvnorm, mvuni, x)
-        @test_throws ArgumentError BAT.apply_dist_trafo(stduvnorm, mvnorm, x)
-        @test_throws ArgumentError BAT.apply_dist_trafo(stduvnorm, stdmvnorm1, x)
-        @test_throws ArgumentError BAT.apply_dist_trafo(stduvnorm, stdmvnorm2, x)
+        @test_throws ArgumentError vartransform_def(mvuni, mvnorm, x)
+        @test_throws ArgumentError vartransform_def(mvnorm, mvuni, x)
+        @test_throws ArgumentError vartransform_def(stduvnorm, mvnorm, x)
+        @test_throws ArgumentError vartransform_def(stduvnorm, stdmvnorm1, x)
+        @test_throws ArgumentError vartransform_def(stduvnorm, stdmvnorm2, x)
     end
 
     let
         primary_dist = NamedTupleDist(x = Normal(2), c = 5)
         f = x -> NamedTupleDist(y = Normal(x.x, 3), z = MvNormal([1.3 0.5; 0.5 2.2]))
-        trg_d = @inferred(HierarchicalDistribution(f, primary_dist))
-        src_d = BAT.StandardMvNormal(totalndof(varshape(trg_d)))
-        test_back_and_forth(trg_d, src_d)
-        test_dist_trafo_moments(trg_d, src_d)
+        trg = @inferred(HierarchicalDistribution(f, primary_dist))
+        src = BAT.StandardMvNormal(totalndof(varshape(trg)))
+        test_back_and_forth(trg, src)
+        test_dist_trafo_moments(trg, src)
     end
 
 
@@ -156,7 +156,7 @@ import ForwardDiff, Zygote
 
     for VT in (NamedTuple, ShapedAsNT)
         src_dist = unshaped(NamedTupleDist(VT, a = Weibull(), b = MvNormal([1.3 0.6; 0.6 2.4])))
-        f = BAT.DistributionTransform(Normal, src_dist)
+        f = vartransform(Normal, src_dist)
         x = rand(src_dist)
         InverseFunctions.test_inverse(f, x)
         ChangesOfVariables.test_with_logabsdet_jacobian(f, x, ForwardDiff.jacobian)
@@ -165,7 +165,7 @@ import ForwardDiff, Zygote
     @testset "trafo broadcasting" begin
         dist = NamedTupleDist(a = Weibull(), b = Exponential())
         smpls = bat_sample(dist, IIDSampling(nsamples = 100)).result
-        trafo = BAT.DistributionTransform(Normal, dist)
+        trafo = vartransform(Normal, dist)
         @inferred(broadcast(trafo, smpls)) isa DensitySampleVector
         smpls_tr = trafo.(smpls)
         smpls_tr_cmp = [trafo(s) for s in smpls]
@@ -180,7 +180,7 @@ import ForwardDiff, Zygote
         normal1 = Normal()
         normal2 = Normal(2)
 
-        trafo = @inferred(BAT.DistributionTransform(dist1, dist2))
+        trafo = @inferred(vartransform(dist1, dist2))
         inv_trafo = @inferred(inverse(trafo))
 
         composed_trafo = @inferred(∘(trafo, inv_trafo))
@@ -188,7 +188,7 @@ import ForwardDiff, Zygote
         @test composed_trafo ∘ trafo == trafo
         @test_throws ArgumentError  trafo ∘ composed_trafo
 
-        trafo = @inferred(BAT.DistributionTransform(normal1, normal2))
+        trafo = @inferred(vartransform(normal1, normal2))
         @test_throws ArgumentError trafo ∘ trafo
     end
 
@@ -238,13 +238,13 @@ import ForwardDiff, Zygote
         @test Zygote.jacobian(BAT._rev_cumsum, xs)[1] ≈ ForwardDiff.jacobian(BAT._rev_cumsum, xs)
         @test Zygote.jacobian(BAT._exp_cumsum_log, xs)[1] ≈ ForwardDiff.jacobian(BAT._exp_cumsum_log, xs) ≈ ForwardDiff.jacobian(cumprod, xs)
 
-        src_v = [0.6, 0.7, 0.8, 0.9]
-        f = inverse(BAT.DistributionTransform(Uniform, DistributionsAD.TuringDirichlet([3.0, 4.0, 5.0, 6.0, 7.0])))
-        @test isapprox(ForwardDiff.jacobian(f, src_v), Zygote.jacobian(f, src_v)[1], rtol = 10^-4)
-        f = inverse(BAT.DistributionTransform(Uniform, Dirichlet([3.0, 4.0, 5.0, 6.0, 7.0])))
-        @test isapprox(ForwardDiff.jacobian(f, src_v), Zygote.jacobian(f, src_v)[1], rtol = 10^-4)
-        f = inverse(BAT.DistributionTransform(Normal, Dirichlet([3.0, 4.0, 5.0, 6.0, 7.0])))
-        @test isapprox(ForwardDiff.jacobian(f, src_v), Zygote.jacobian(f, src_v)[1], rtol = 10^-4)
+        x = [0.6, 0.7, 0.8, 0.9]
+        f = inverse(vartransform(Uniform, DistributionsAD.TuringDirichlet([3.0, 4.0, 5.0, 6.0, 7.0])))
+        @test isapprox(ForwardDiff.jacobian(f, x), Zygote.jacobian(f, x)[1], rtol = 10^-4)
+        f = inverse(vartransform(Uniform, Dirichlet([3.0, 4.0, 5.0, 6.0, 7.0])))
+        @test isapprox(ForwardDiff.jacobian(f, x), Zygote.jacobian(f, x)[1], rtol = 10^-4)
+        f = inverse(vartransform(Normal, Dirichlet([3.0, 4.0, 5.0, 6.0, 7.0])))
+        @test isapprox(ForwardDiff.jacobian(f, x), Zygote.jacobian(f, x)[1], rtol = 10^-4)
     end
 end
 
