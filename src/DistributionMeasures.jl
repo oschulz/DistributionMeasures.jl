@@ -1,7 +1,7 @@
 module DistributionMeasures
 
 import Random
-using Random: AbstractRNG
+using Random: AbstractRNG, rand!
 
 import DensityInterface
 using DensityInterface: logdensityof
