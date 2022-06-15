@@ -8,8 +8,11 @@ The univariate standard normal distribution.
 const StandardNormal = StandardDist{Normal,0}
 export StandardNormal
 
+Distributions.Normal(d::StandardDist{Normal,0}) = Distributions.Normal()
+Base.convert(::Type{Distributions.Normal}, d::StandardDist{Normal,1}) = Distributions.Normal(d)
+
 Distributions.MvNormal(d::StandardDist{Normal,1}) = MvNormal(PDMats.ScalMat(length(d), 1))
-Base.convert(::Type{Distributions.MvNormal}, d::StandardDist{Normal,1}) = MvNormal(d)
+Base.convert(::Type{Distributions.MvNormal}, d::StandardDist{Normal,1}) = Distributions.MvNormal(d)
 
 Base.minimum(d::StandardDist{Normal,0}) = -Inf
 Base.maximum(d::StandardDist{Normal,0}) = +Inf

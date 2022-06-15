@@ -8,6 +8,9 @@ The univariate standard uniform distribution.
 const StandardUniform = StandardDist{Uniform,0}
 export StandardUniform
 
+Distributions.Uniform(d::StandardDist{Uniform,0}) = Distributions.Uniform()
+Base.convert(::Type{Distributions.Uniform}, d::StandardDist{Uniform,1}) = Distributions.Uniform(d)
+
 Base.minimum(::StandardDist{Uniform,0}) = 0
 Base.maximum(::StandardDist{Uniform,0}) = 1
 
