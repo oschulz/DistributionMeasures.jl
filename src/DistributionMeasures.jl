@@ -14,11 +14,12 @@ import MeasureBase
 using MeasureBase: AbstractMeasure, Lebesgue, Counting
 using MeasureBase: StdMeasure, StdNormal, StdUniform, StdExponential
 using MeasureBase: PowerMeasure
+using MeasureBase: vartransform, vartransform_origin, from_origin, to_origin
 
 import Distributions
 using Distributions: Distribution, VariateForm, ValueSupport, ContinuousDistribution
 using Distributions: Univariate, Multivariate, ArrayLikeVariate, Continuous, Discrete
-using Distributions: Uniform, Normal, MvNormal
+using Distributions: Uniform, Normal, MvNormal, Beta, Dirichlet
 using Distributions: ReshapedDistribution
 
 import Statistics
