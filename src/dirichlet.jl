@@ -15,7 +15,7 @@ end
 
 function _dirichlet_beta_trafo(α::Real, β::Real, x::Real)
     R = float(promote_type(typeof(α), typeof(β), typeof(x)))
-    convert(R, vartransform(Beta(α, β), StandardUvUniform(), x))::R
+    convert(R, vartransform_def(Beta(α, β), StandardUvUniform(), x))::R
 end
 
 _a_times_one_minus_b(a::Real, b::Real) = a * (1 - b)

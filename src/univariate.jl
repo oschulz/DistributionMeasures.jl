@@ -9,8 +9,8 @@
 
 
 # Use ForwardDiff for univariate distribution transformations:
-@inline function ChainRulesCore.rrule(::typeof(vartransform), trg::Distribution{Univariate}, src::Distribution{Univariate}, x::Any)
-    ChainRulesCore.rrule(fwddiff(vartransform), trg, src, x)
+@inline function ChainRulesCore.rrule(::typeof(vartransform_def), trg::Distribution{Univariate}, src::Distribution{Univariate}, x::Any)
+    ChainRulesCore.rrule(fwddiff(vartransform_def), trg, src, x)
 end
 
 
@@ -134,18 +134,18 @@ end
 @inline MeasureBase.to_origin(src::Normal, x::Real) = _rescaled_to_origin(src, x)
 @inline MeasureBase.from_origin(trg::Normal, x::Real) = _origin_to_rescaled(trg, x)
 
-@inline MeasureBase.vartransform(::StandardUniform, ::StandardNormal, x::Real) = StatsFuns.normcdf(x)
-@inline MeasureBase.vartransform(::StandardNormal, ::StandardUniform, x::Real) = StatsFuns.norminvcdf(x)
+@inline MeasureBase.vartransform_def(::StandardUniform, ::StandardNormal, x::Real) = StatsFuns.normcdf(x)
+@inline MeasureBase.vartransform_def(::StandardNormal, ::StandardUniform, x::Real) = StatsFuns.norminvcdf(x)
 
 
-function MeasureBase.vartransform(trg::Distribution{Univariate}, src::StandardDist{D,1}, x::AbstractVector{<:Real}) where D
+function MeasureBase.vartransform_def(trg::Distribution{Univariate}, src::StandardDist{D,1}, x::AbstractVector{<:Real}) where D
     @_adignore if !(size(src) == size(x) == (1,))
         throw(ArgumentError("Length of src and length of x must be one"))
     end
-    return vartransform(trg, StandardDist{D}(), first(x))
+    return vartransform_def(trg, StandardDist{D}(), first(x))
 end
 
-function MeasureBase.vartransform(trg::StandardDist{D,1}, src::Distribution{Univariate}, x::Real) where D
+function MeasureBase.vartransform_def(trg::StandardDist{D,1}, src::Distribution{Univariate}, x::Real) where D
     @_adignore size(trg) == (1,) || throw(ArgumentError("Length of trg must be one"))
-    return Fill(vartransform(StandardDist{D}(), src, x))
+    return Fill(vartransform_def(StandardDist{D}(), src, x))
 end

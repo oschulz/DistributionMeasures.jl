@@ -58,12 +58,12 @@ function _check_arraylike_match(trg::Distribution{<:ArrayLikeVariate{N},Continuo
 end
 
 
-function MeasureBase.vartransform(trg::StandardDist{D,N}, src::StandardDist{D,N}, x) where {D,N}
+function MeasureBase.vartransform_def(trg::StandardDist{D,N}, src::StandardDist{D,N}, x) where {D,N}
     _check_arraylike_match(trg, src, x)
     return x
 end
 
-function MeasureBase.vartransform(trg_d::DT, src_d::DT, src_v) where {DT <: StdMvMeasure}
+function MeasureBase.vartransform_def(trg_d::DT, src_d::DT, src_v) where {DT <: StdMvMeasure}
     _check_arraylike_match(trg, src, x)
     return src_v
 end

@@ -4,17 +4,17 @@ MeasureBase.getdof(d::Distributions.Product) = length(d)
 
 function _product_dist_trafo_impl(trgs, srcs, x)
     _check_arraylike_match(trg, src, x)
-    fwddiff(vartransform).(trgs, srcs, x)
+    fwddiff(vartransform_def).(trgs, srcs, x)
 end
 
-function MeasureBase.vartransform(trg::Distributions.Product, src::Distributions.Product, x)
+function MeasureBase.vartransform_def(trg::Distributions.Product, src::Distributions.Product, x)
     _product_dist_trafo_impl(trg.v, src.v, x)
 end
 
-function MeasureBase.vartransform(trg::AnyStdMv, src::Distributions.Product, x)
+function MeasureBase.vartransform_def(trg::AnyStdMv, src::Distributions.Product, x)
     _product_dist_trafo_impl((std_univariate(trg),), src.v, x)
 end
 
-function MeasureBase.vartransform(trg::Distributions.Product, src::AnyStdMv, x)
+function MeasureBase.vartransform_def(trg::Distributions.Product, src::AnyStdMv, x)
     _product_dist_trafo_impl(trg.v, (std_univariate(src),), x)
 end
