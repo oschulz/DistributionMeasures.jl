@@ -89,8 +89,8 @@ StatsBase.modes(d::StandardDist) = [StatsBase.mode(d)]
 
 # ToDo: Define cov for N!=1?
 Statistics.cov(d::StandardDist{D,1}) where {D} = Diagonal(Statistics.var(d))
-Distributions.invcov(d::StandardDist{D,1}) where {D} = Diagonal(Fill(inv(var(StandardDist{D}())), length(d)))
-Distributions.logdetcov(d::StandardDist{D,1}) where {D} = log(var(StandardDist{D}())) + length(d)
+Distributions.invcov(d::StandardDist{D,1}) where {D} = Diagonal(Fill(inv(Statistics.var(StandardDist{D}())), length(d)))
+Distributions.logdetcov(d::StandardDist{D,1}) where {D} = log(Statistics.var(StandardDist{D}())) + length(d)
 
 StatsBase.entropy(d::StandardDist{D,0}) where {D} = StatsBase.entropy(nonstddist(d))
 StatsBase.entropy(d::StandardDist{D,N}) where {D,N} = length(d) * StatsBase.entropy(StandardDist{D}())

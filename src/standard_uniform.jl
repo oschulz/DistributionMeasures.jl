@@ -21,6 +21,7 @@ Statistics.mean(d::StandardDist{Uniform,0}) = 1//2
 StatsBase.median(d::StandardDist{Uniform,0}) = Statistics.mean(d)
 StatsBase.mode(d::StandardDist{Uniform,0}) = Statistics.mean(d)
 StatsBase.modes(d::StandardDist{Uniform,0}) = Zeros{Int}(0)
+StatsBase.modes(d::StandardDist{Uniform,N}) where N = Fill(Zeros{Int}(size(d)))
 
 Statistics.var(d::StandardDist{Uniform,0}) = 1//12
 StatsBase.std(d::StandardDist{Uniform,0}) = sqrt(Statistics.var(d))

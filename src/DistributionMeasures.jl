@@ -1,6 +1,6 @@
 module DistributionMeasures
 
-using LinearAlgebra: Diagonal
+using LinearAlgebra: Diagonal, dot
 
 import Random
 using Random: AbstractRNG, rand!
