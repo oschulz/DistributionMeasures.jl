@@ -1,3 +1,11 @@
+# This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
+
+
+@inline MeasureBase.insupport(d::Distribution) = Distributions.insuinsupportpport(d)
+@inline MeasureBase.paramnames(d::Distribution) = propertynames(d)
+@inline MeasureBase.params(d::Distribution) = NamedTuple{MeasureBase.paramnames(m.d)}(Distributions.params(d))
+
+
 """
     struct DistributionMeasure <: AbstractMeasure
 
@@ -72,5 +80,6 @@ function Base.rand(rng::AbstractRNG, ::Type{T}, m::PowerMeasure{<:DistributionMe
 end
 
 
-@inline MeasureBase.paramnames(m::DistributionMeasure) = propertynames(m.d)
-@inline MeasureBase.params(m::DistributionMeasure) = NamedTuple{MeasureBase.paramnames(m.d)}(Distributions.params(m.d))
+@inline MeasureBase.insupport(m::DistributionMeasure) = MeasureBase.insupport(m.d)
+@inline MeasureBase.paramnames(m::DistributionMeasure) = MeasureBase.paramnames(m.d)
+@inline MeasureBase.params(m::DistributionMeasure) = MeasureBase.params(m.d)
