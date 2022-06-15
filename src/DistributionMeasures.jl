@@ -12,8 +12,13 @@ using MeasureBase: PowerMeasure
 
 import Distributions
 using Distributions: Distribution, VariateForm, ValueSupport
-using Distributions: ArrayLikeVariate, Continuous, Discrete
+using Distributions: Univariate, Multivariate, ArrayLikeVariate, Continuous, Discrete
+using Distributions: Uniform, Normal, MvNormal
 using Distributions: ReshapedDistribution
+
+import Statistics
+import StatsBase
+import StatsFuns
 
 import ChainRulesCore
 using ChainRulesCore: ZeroTangent, NoTangent, unthunk, @thunk
