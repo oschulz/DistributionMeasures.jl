@@ -1,12 +1,12 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-@inline function MeasureBase.vartransform(trg::StandardDist{Uniform,N}, src::StandardDist{Normal,N}, x)
+@inline function MeasureBase.vartransform(trg::StandardDist{Uniform,N}, src::StandardDist{Normal,N}, x) where N
     _check_arraylike_match(trg, src, x)
     StatsFuns.normcdf.(x)
 end
 
 
-@inline function MeasureBase.vartransform(trg::StandardDist{Uniform,N}, src::StandardDist{Normal,N}, x)
+@inline function MeasureBase.vartransform(trg::StandardDist{Normal,N}, src::StandardDist{Uniform,N}, x) where N
     _check_arraylike_match(trg, src, x)
     StatsFuns.norminvcdf.(x)
 end

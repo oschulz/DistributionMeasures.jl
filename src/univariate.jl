@@ -91,7 +91,7 @@ end
 end
 
 
-@inline function MeasureBase.to_origin(src::Distribution{Univariate,Continuous}, x<:Real)
+@inline function MeasureBase.to_origin(src::Distribution{Univariate,Continuous}, x::Real)
     R = _result_numtype(src, x)
     if Distributions.insupport(src, x)
         y = _trafo_cdf(src, x)
@@ -116,13 +116,13 @@ end
 end
 
 
-function _rescaled_to_origin(src::UnivariateDistribution, x::T) where {T<:Real}
+function _rescaled_to_origin(src::Distribution{Univariate}, x::T) where {T<:Real}
     src_offs, src_scale = location(src), scale(src)
     y = (x - src_offs) / src_scale
     convert(_result_numtype(src, x), y)
 end
 
-function _origin_to_rescaled(trg::UnivariateDistribution, x::T) where {T<:Real}
+function _origin_to_rescaled(trg::Distribution{Univariate}, x::T) where {T<:Real}
     trg_offs, trg_scale = location(trg), scale(trg)
     y = muladd(x, trg_scale, trg_offs)
     convert(_result_numtype(src, x), y)
@@ -140,14 +140,14 @@ end
 @inline MeasureBase.vartransform(::StandardNormal, ::StandardUniform, x::Real) = StatsFuns.norminvcdf(x)
 
 
-function MeasureBase.vartransform(trg::Distribution{Univariate}, src::StandardDist{D,T,1}, x::AbstractVector{<:Real}) where {D,T}
+function MeasureBase.vartransform(trg::Distribution{Univariate}, src::StandardDist{D,1}, x::AbstractVector{<:Real}) where D
     @_adignore if !(size(src) == size(x) == (1,))
         throw(ArgumentError("Length of src and length of x must be one"))
     end
-    return vartransform(trg, StandardDist{D,T}(), first(x))
+    return vartransform(trg, StandardDist{D}(), first(x))
 end
 
-function MeasureBase.vartransform(trg::StandardDist{D,T,1}, src::Distribution{Univariate}, x::Real) where {D,T}
+function MeasureBase.vartransform(trg::StandardDist{D,1}, src::Distribution{Univariate}, x::Real) where D
     @_adignore size(trg) == (1,) || throw(ArgumentError("Length of trg must be one"))
-    return Fill(vartransform(StandardDist{D,T}(), src, x))
+    return Fill(vartransform(StandardDist{D}(), src, x))
 end
