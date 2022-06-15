@@ -1,5 +1,7 @@
 module DistributionMeasures
 
+using LinearAlgebra: Diagonal
+
 import Random
 using Random: AbstractRNG, rand!
 
@@ -48,6 +50,8 @@ include("distribution_measure.jl")
 const MeasureLike = Union{AbstractMeasure,Distribution}
 
 export MeasureLike, DistributionMeasure
+
+export StandardDist
 
 
 end # module
