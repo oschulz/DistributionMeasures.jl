@@ -31,7 +31,11 @@ function Base.show(io::IO, d::StandardDist{D}) where {D}
 end
 
 
-@inline nonstddist(d::StandardDist{D,0}) where {D} = D(Distributions.params(D())...)
+@inline nonstddist(::StandardDist{D,0}) where {D} = D(Distributions.params(D())...)
+@inline function nonstddist(d::StandardDist{D,N}) where {D,N}
+    nonstd0 = nonstddist(StandardDist{D}())
+    reshape(Distributions.product_distribution(fill(nonstd0, length(d))), size(d))
+end
 
 
 (::Type{D}, d::StandardDist{D,0}) where {D<:Distribution{Univariate,Continuous}} = nonstddist(d)
@@ -81,7 +85,7 @@ for f in (
     end
 end
 
-StatsBase.modes(d::StandardDist) = [mode(d)]
+StatsBase.modes(d::StandardDist) = [StatsBase.mode(d)]
 
 # ToDo: Define cov for N!=1?
 Statistics.cov(d::StandardDist{D,1}) where {D} = Diagonal(var(d))
@@ -187,13 +191,10 @@ end
 
 
 Base.rand(rng::AbstractRNG, d::StandardDist{D,0}) where {D} = rand(rng, nonstddist(d))
-
-function Distributions._rand!(rng::AbstractRNG, d::StandardDist{D,N}, A::AbstractArray{U,N}) where {D,N,U<:Real}
-    broadcast!(() -> rand(rng, StandardDist{D,U}()), A)
-end
+Random.rand!(rng::AbstractRNG, d::StandardDist{D,N}, x::AbstractArray{<:Real,N}) where {D,N} = rand!(rng, StandardDist{D}(), x)
 
 
-Distributions.truncated(d::StandardDist{D,0}, l::Real, u::Real) where {D} = truncated(nonstddist(d), l, u)
+Distributions.truncated(d::StandardDist{D,0}, l::Real, u::Real) where {D} = Distributions.truncated(nonstddist(d), l, u)
 
 Distributions.product_distribution(dists::AbstractVector{StandardDist{D,0}}) where {D} = StandardDist{D}(size(dists)...)
 Distributions.product_distribution(dists::AbstractArray{StandardDist{D,0}}) where {D} = StandardDist{D}(size(dists)...)
