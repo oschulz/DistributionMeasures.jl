@@ -12,20 +12,3 @@ function firsttype end
 
 firsttype(::Type{T}, ::Type{U}) where {T<:Real,U<:Real} = T
 firsttype(::Type{T}, ::Type{<:ForwardDiff.Dual{tag,<:Real,N}}) where {T<:Real,tag,N} = ForwardDiff.Dual{tag,T,N}
-
-
-"""
-    DistributionMeasures.convert_realtype(::Type{T}, x) where {T<:Real}
-
-Convert x to use `T` as it's underlying type for real numbers.
-"""
-function convert_realtype end
-
-_convert_realtype_pullback(ΔΩ) = NoTangent(), NoTangent, ΔΩ
-ChainRulesCore.rrule(::typeof(convert_realtype), ::Type{T}, x) = nothing, _convert_realtype_pullback
-
-@inline convert_realtype(::Type{T}, x::T) where {T<:Real} = x
-@inline convert_realtype(::Type{T}, x::AbstractArray{T}) where {T<:Real} = x
-@inline convert_realtype(::Type{T}, x::U) where {T<:Real,U<:Real} = T(X)
-convert_realtype(::Type{T}, x::AbstractArray{U}) where {T<:Real,U<:Real} = T.(x)
-convert_realtype(::Type{T}, x) where {T<:Real} = fmap(elem -> convert_realtype(T, elem), x)

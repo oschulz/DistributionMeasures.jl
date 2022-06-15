@@ -41,19 +41,24 @@ using Functors: fmap
 
 using ArraysOfArrays: ArrayOfSimilarArrays, flatview
 
+const MeasureLike = Union{AbstractMeasure,Distribution}
+export MeasureLike
 
 include("utils.jl")
+include("type_utils.jl")
 include("autodiff_utils.jl")
 include("standard_dist.jl")
 include("standard_uniform.jl")
 include("standard_normal.jl")
 include("distribution_measure.jl")
+include("dist_vartransform.jl")
+include("univariate.jl")
+include("standardmv.jl")
+include("product.jl")
+include("reshaped.jl")
+include("dirichlet.jl")
 
-
-const MeasureLike = Union{AbstractMeasure,Distribution}
-
-export MeasureLike, DistributionMeasure
-
+export DistributionMeasure
 export StandardDist
 
 

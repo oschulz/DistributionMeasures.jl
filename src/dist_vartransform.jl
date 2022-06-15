@@ -31,18 +31,17 @@ MeasureBase.vartransform(::MeasureLike, ::Type{D}) where {D<:Union{StandardUnifo
 
 
 """
-    DistributionMeasures.check_varshape(μ, x)::Nothing
+    DistributionMeasures.check_varshape(d::Distribution, x)::Nothing
 
-Checks if `x` has the correct shape/size for a variate of measure-like object
-`μ`, throws an `ArgumentError` if not.
+Check if `x` has the correct shape/size for a variate `d`, throw an
+`ArgumentError` if not.
 """
 function check_varshape end
 
 _check_varshape_pullback(ΔΩ) = NoTangent(), ZeroTangent()
 ChainRulesCore.rrule(::typeof(check_varshape), μ, x) = check_varshape(μ, x), _check_varshape_pullback
 
-
-function MeasureBase.check_varshape(d::Distribution{ArrayLikeVariate{N}}, x::AbstractArray{T,N}) where {T,N}
+function check_varshape(d::Distribution{ArrayLikeVariate{N}}, x::AbstractArray{T,N}) where {T,N}
     dist_size = size(d)
     var_size = size(x)
     if dist_size != var_size
