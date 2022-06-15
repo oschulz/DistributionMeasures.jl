@@ -106,31 +106,30 @@ end
 
 @inline Distributions.logpdf(d::StandardDist{D,0}, x::U) where {D,U} = Distributions.logpdf(nonstddist(d), x)
 
-function Distributions.logpdf(d::StandardDist{D,1}, x::AbstractVector{U}) where {D,U<:Real}
+function Distributions.logpdf(d::StandardDist{D,N}, x::AbstractArray{<:Real,N}) where {D,N}
     _checkvarsize(d, x)
     Distributions._logpdf(d, x)
 end
 
-function Distributions._logpdf(d::StandardDist{D,1}, x::AbstractVector{U}) where {D,U<:Real}
-    sum(x_i -> Distributions.logpdf(StandardDist{D,0}(), x_i), x)
+function Distributions._logpdf(::StandardDist{D,1}, x::AbstractArray{<:Real,1}) where D
+    sum(Base.Fix1(Distributions.logpdf, StandardDist{D}()), x)
 end
 
-function Distributions.logpdf(d::StandardDist{D,2}, x::AbstractMatrix{U}) where {D,U<:Real}
-    _checkvarsize(d, x)
-    Distributions._logpdf(d, x)
+function Distributions._logpdf(::StandardDist{D,2}, x::AbstractArray{<:Real,2}) where D
+    sum(Base.Fix1(Distributions.logpdf, StandardDist{D}()), x)
 end
 
-function Distributions.logpdf(d::StandardDist{D,N}, x::AbstractArray{U,N}) where {D,N,U<:Real}
-    _checkvarsize(d, x)
-    Distributions._logpdf(d, x)
+function Distributions._logpdf(::StandardDist{D,N}, x::AbstractArray{<:Real,N}) where {D,N}
+    sum(Base.Fix1(Distributions.logpdf, StandardDist{D}()), x)
 end
+
 
 
 Distributions.gradlogpdf(d::StandardDist{D,0}, x::Real) where {D} = Distributions.gradlogpdf(nonstddist(d), x)
 
 function Distributions.gradlogpdf(d::StandardDist{D,N}, x::AbstractArray{<:Real,N}) where {D,N}
     _checkvarsize(d, x)
-    gradlogpdf.(StandardDist{D,0}(), x)
+    Distributions.gradlogpdf.(StandardDist{D,0}(), x)
 end
 
 
@@ -182,7 +181,8 @@ for f in (
 end
 
 
-Base.rand(rng::AbstractRNG, d::StandardDist{D,0}) where {D} = rand(rng, nonstddist(d))
+Base.rand(rng::AbstractRNG, d::StandardDist{D,0}) where D = rand(rng, nonstddist(d))
+Random.rand!(rng::AbstractRNG, d::StandardDist{D,0}, x::AbstractArray{<:Real,0}) where D = (x[] = rand(rng, d); return x)
 Random.rand!(rng::AbstractRNG, d::StandardDist{D,N}, x::AbstractArray{<:Real,N}) where {D,N} = rand!(rng, StandardDist{D}(), x)
 
 

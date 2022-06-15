@@ -53,7 +53,7 @@ Distributions.pdf(d::StandardDist{Normal,0}, x::U) where {U<:Real} = invsqrt2π 
 @inline Distributions.invlogccdf(d::StandardDist{Normal,0}, p::Real) = StatsFuns.norminvlogccdf(p)
 
 Base.rand(rng::AbstractRNG, d::StandardDist{Normal,0}) = randn(rng)
-Base.rand(rng::AbstractRNG, d::StandardDist{Normal,N}) where N = randn(rng, size(d))
+Base.rand(rng::AbstractRNG, d::StandardDist{Normal,N}) where N = randn(rng, size(d)...)
 Random.rand!(rng::AbstractRNG, d::StandardDist{Normal,N}, x::AbstractArray{<:Real,N}) where {D,N} = Random.randn!(rng, x)
 
 Distributions.invcov(d::StandardDist{Normal,1}) = cov(d)
