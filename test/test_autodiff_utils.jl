@@ -4,8 +4,8 @@ using DistributionMeasures
 using Test
 
 using LinearAlgebra
-using ValueShapes, Distributions, ArraysOfArrays
-using ForwardDiff, Zygote, DistributionsAD
+using Distributions, ArraysOfArrays
+import ForwardDiff, Zygote
 
 
 @testset "trafo_utils" begin
