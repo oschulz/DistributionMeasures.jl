@@ -52,7 +52,7 @@ end
 
 function _check_arraylike_match(trg::Distribution{<:ArrayLikeVariate{N},Continuous}, src::Distribution{<:ArrayLikeVariate{N},Continuous}, x) where N
     @_adignore begin
-        @argcheck x isa AbstractArray{<:Real,N} 
+        @argcheck N == 0 && x isa Real || N > 0 && x isa AbstractArray{<:Real,N} 
         @argcheck size(trg) == size(src) == size(x)
     end
 end

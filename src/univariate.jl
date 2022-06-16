@@ -19,12 +19,12 @@ _dist_params_numtype(d::Distribution) = promote_type(map(typeof, Distributions.p
 
 @inline _trafo_cdf(d::Distribution{Univariate,Continuous}, x::Real) = _trafo_cdf_impl(_dist_params_numtype(d), d, x)
 
-@inline _trafo_cdf_impl(::Type{<:Real}, d::Distribution{Univariate,Continuous}, x::Real) = cdf(d, x)
+@inline _trafo_cdf_impl(::Type{<:Real}, d::Distribution{Univariate,Continuous}, x::Real) = Distributions.cdf(d, x)
 
 @inline function _trafo_cdf_impl(::Type{<:Union{Integer,AbstractFloat}}, d::Distribution{Univariate,Continuous}, x::ForwardDiff.Dual{TAG}) where {N,TAG}
     x_v = ForwardDiff.value(x)
-    u = cdf(d, x_v)
-    dudx = pdf(d, x_v)
+    u = Distributions.cdf(d, x_v)
+    dudx = Distributions.pdf(d, x_v)
     ForwardDiff.Dual{TAG}(u, dudx * ForwardDiff.partials(x))
 end
 
@@ -35,25 +35,26 @@ end
 
 @inline function _trafo_quantile_impl(::Type{<:Union{Integer,AbstractFloat}}, d::Distribution{Univariate,Continuous}, u::ForwardDiff.Dual{TAG}) where {TAG}
     x = _trafo_quantile_impl_generic(d, ForwardDiff.value(u))
-    dxdu = inv(pdf(d, x))
+    dxdu = inv(Distributions.pdf(d, x))
     ForwardDiff.Dual{TAG}(x, dxdu * ForwardDiff.partials(u))
 end
 
 
-@inline _trafo_quantile_impl_generic(d::Distribution{Univariate,Continuous}, u::Real) = quantile(d, u)
+@inline _trafo_quantile_impl_generic(d::Distribution{Univariate,Continuous}, u::Real) = Distributions.quantile(d, u)
 
 # Workaround for Beta dist, ForwardDiff doesn't work for parameters:
 @inline _trafo_quantile_impl_generic(d::Beta{T}, u::Real) where {T<:ForwardDiff.Dual} = convert(float(typeof(u)), NaN)
 # Workaround for Beta dist, current quantile implementation only supports Float64:
-@inline _trafo_quantile_impl_generic(d::Beta{T}, u::Union{Integer,AbstractFloat}) where {T<:Union{Integer,AbstractFloat}} = _trafo_quantile_impl(T, d, convert(promote_type(Float64, typeof(u)), u))
-
+@inline function _trafo_quantile_impl_generic(d::Beta{T}, u::Union{Integer,AbstractFloat}) where {T<:Union{Integer,AbstractFloat}}
+    Distributions.quantile(d, convert(promote_type(Float64, typeof(u)), u))
+end
 
 #=
 # ToDo:
 
 # Workaround for rounding errors that can result in quantile values outside of support of Truncated:
 @inline function _trafo_quantile_impl_generic(d::Truncated{<:Distribution{Univariate,Continuous}}, u::Real)
-    x = quantile(d, u)
+    x = Distributions.quantile(d, u)
     T = typeof(x)
     min_x = T(minimum(d))
     max_x = T(maximum(d))
@@ -68,7 +69,7 @@ end
 
 # Workaround for rounding errors that can result in quantile values outside of support of Truncated:
 @inline function _trafo_quantile_impl_generic(d::Truncated{<:Distribution{Univariate,Continuous}}, u::Real)
-    x = quantile(d, u)
+    x = Distributions.quantile(d, u)
     T = typeof(x)
     min_x = T(minimum(d))
     max_x = T(maximum(d))
@@ -84,8 +85,8 @@ end
 
 
 @inline function _result_numtype(d::Distribution{Univariate}, x::T) where {T<:Real}
-    # float(promote_type(T, eltype(Distributions.params(d))))
-    firsttype(first(typeof(x), promote_type(map(eltype, Distributions.params(d))...)))
+    float(promote_type(T, eltype(Distributions.params(d))))
+    # firsttype(first(typeof(x), promote_type(map(eltype, Distributions.params(d))...)))
 end
 
 
