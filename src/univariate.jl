@@ -116,15 +116,15 @@ end
 
 
 function _rescaled_to_origin(src::Distribution{Univariate}, x::T) where {T<:Real}
-    src_offs, src_scale = location(src), scale(src)
+    src_offs, src_scale = Distributions.location(src), Distributions.scale(src)
     y = (x - src_offs) / src_scale
     convert(_result_numtype(src, x), y)
 end
 
 function _origin_to_rescaled(trg::Distribution{Univariate}, x::T) where {T<:Real}
-    trg_offs, trg_scale = location(trg), scale(trg)
+    trg_offs, trg_scale = Distributions.location(trg), Distributions.scale(trg)
     y = muladd(x, trg_scale, trg_offs)
-    convert(_result_numtype(src, x), y)
+    convert(_result_numtype(trg, x), y)
 end
 
 @inline MeasureBase.vartransform_origin(d::Uniform) = StandardUniform()

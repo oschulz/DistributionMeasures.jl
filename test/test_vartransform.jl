@@ -8,7 +8,7 @@ using InverseFunctions, ChangesOfVariables
 using Distributions, ArraysOfArrays
 import ForwardDiff, Zygote
 
-using MeasureBase: vartransform_def, vartransform_origin, select_vartransform_intermediate
+using MeasureBase: vartransform, vartransform_def, vartransform_origin, select_vartransform_intermediate
 using DistributionsMeasures: _trafo_cdf, _trafo_quantile
 
 using ParameterHandling: flatten
@@ -38,21 +38,14 @@ include("getjacobian.jl")
         end
     end
 
-    function get_trgxs(trg, src, X)
-        return (x -> vartransform_def(trg, src, x)).(nestedview(X))
-    end
-
-    function get_trgxs(trg, src::Distribution{Univariate}, X)
-        return (x -> vartransform_def(trg, src, x)).(X)
-    end
-
     function test_dist_trafo_moments(trg, src)
+        unshaped(x) = first(torv_and_back(x))
         @testset "check moments of trafo $(typeof(trg).name) <- $(typeof(src).name)" begin
-            X = flatview(rand(src, 10^5))
-            trgxs = get_trgxs(trg, src, X)
-            unshaped_trgxs = broadcast(unshaped, trgxs, Ref(varshape(trg)))
-            @test isapprox(mean(unshaped_trgxs), mean(unshaped(trg)), atol = 0.1)
-            @test isapprox(cov(unshaped_trgxs), cov(unshaped(trg)), rtol = 0.1)
+            X = rand(src, 10^6)
+            Y = vartransform(trg, src).(X)
+            Y_ref = rand(trg, 10^6)
+            @test isapprox(mean(unshaped.(Y)), mean(unshaped.(Y_ref)), rtol = 0.5)
+            @test isapprox(cov(unshaped.(Y)), cov(unshaped.(Y_ref)), rtol = 0.5)
         end
     end
 
@@ -89,11 +82,10 @@ include("getjacobian.jl")
 
     test_back_and_forth(beta, stduvnorm)
     test_back_and_forth(gamma, stduvnorm)
+    test_back_and_forth(gamma, beta)
 
     test_dist_trafo_moments(normal2, normal1)
     test_dist_trafo_moments(uniform2, uniform1)
-
-    test_dist_trafo_moments(beta, gamma)
 
     test_dist_trafo_moments(beta, stduvnorm)
     test_dist_trafo_moments(gamma, stduvnorm)
