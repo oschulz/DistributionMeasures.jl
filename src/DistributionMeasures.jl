@@ -30,6 +30,7 @@ import PDMats
 
 using IrrationalConstants: log2π, invsqrt2π
 
+using Static: True, False, static
 using FillArrays: Fill, Ones, Zeros
 
 import ChainRulesCore
