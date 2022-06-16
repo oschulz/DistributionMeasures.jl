@@ -13,7 +13,7 @@ using DensityInterface: logdensityof
 import MeasureBase
 using MeasureBase: AbstractMeasure, Lebesgue, Counting
 using MeasureBase: StdMeasure, StdNormal, StdUniform, StdExponential
-using MeasureBase: PowerMeasure
+using MeasureBase: PowerMeasure, WeightedMeasure
 using MeasureBase: vartransform, vartransform_def, vartransform_origin, from_origin, to_origin
 using MeasureBase: NoTransformOrigin, NoVarTransform
 
