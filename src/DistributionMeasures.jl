@@ -63,6 +63,7 @@ include("product.jl")
 include("reshaped.jl")
 include("dirichlet.jl")
 
+export StdNormal
 export DistributionMeasure
 export StandardDist
 
