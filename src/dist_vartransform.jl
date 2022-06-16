@@ -24,10 +24,6 @@ MeasureBase.vartransform(::Type{D}, ::MeasureLike) where {D<:Union{StandardUnifo
 MeasureBase.vartransform(::MeasureLike, ::Type{D}) where {D<:Union{StandardUniform,StandardNormal}} = vartransform(_matching_stddist(D,d), d)
 
 
-@inline MeasureBase.select_vartransform_intermediate(::AnyStdMv, mu::StdDistribution) = mu
-@inline MeasureBase.select_vartransform_intermediate(nu::StdDistribution, ::AnyStdMv) = nu
-
-
 
 
 """

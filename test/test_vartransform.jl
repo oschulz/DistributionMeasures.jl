@@ -8,7 +8,7 @@ using InverseFunctions, ChangesOfVariables
 using Distributions, ArraysOfArrays
 import ForwardDiff, Zygote
 
-using MeasureBase: vartransform, vartransform_def, vartransform_origin, select_vartransform_intermediate
+using MeasureBase: vartransform, vartransform_def, vartransform_origin
 using DistributionsMeasures: _trafo_cdf, _trafo_quantile
 
 using ParameterHandling: flatten
