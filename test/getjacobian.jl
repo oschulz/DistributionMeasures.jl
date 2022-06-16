@@ -32,5 +32,3 @@ function getjacobian(f, x)
     vf(V) = torv_and_back(f(to_x(V)))[1]
     ForwardDiff.jacobian(vf, V)
 end
-
-foo(x) = inv(exp(-x) + 1)
