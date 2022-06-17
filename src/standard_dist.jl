@@ -189,6 +189,3 @@ Distributions.truncated(d::StandardDist{D,0}, l::Real, u::Real) where {D} = Dist
 
 Distributions.product_distribution(dists::AbstractVector{StandardDist{D,0}}) where {D} = StandardDist{D}(size(dists)...)
 Distributions.product_distribution(dists::AbstractArray{StandardDist{D,0}}) where {D} = StandardDist{D}(size(dists)...)
-
-
-@inline MeasureBase.getdof(d::StandardDist) = length(d)

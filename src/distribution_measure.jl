@@ -21,6 +21,11 @@ struct DistributionMeasure{F<:VariateForm,S<:ValueSupport,D<:Distribution{F,S}} 
     d::D
 end
 
+#!!!!!!!!!!!!!!!!! Interface
+@inline MeasureBase.insupport(m::DistributionMeasure) = MeasureBase.insupport(m.d)
+@inline MeasureBase.paramnames(m::DistributionMeasure) = MeasureBase.paramnames(m.d)
+@inline MeasureBase.params(m::DistributionMeasure) = MeasureBase.params(m.d)
+
 @inline MeasureBase.AbstractMeasure(d::Distribution) = DistributionMeasure(d)
 
 @inline Base.convert(::Type{AbstractMeasure}, d::Distribution) = DistributionMeasure(d)
@@ -47,8 +52,6 @@ end
 @inline MeasureBase.basemeasure(m::DistributionMeasure{<:ArrayLikeVariate,<:Continuous}) = Lebesgue()^size(m.d)
 @inline MeasureBase.basemeasure(m::DistributionMeasure{<:ArrayLikeVariate{0},<:Discrete}) = Counting()
 @inline MeasureBase.basemeasure(m::DistributionMeasure{<:ArrayLikeVariate,<:Discrete}) = Counting()^size(m.d)
-
-@inline MeasureBase.rootmeasure(m::DistributionMeasure) = MeasureBase.basemeasure(m)
 
 
 Base.rand(rng::AbstractRNG, ::Type{T}, m::DistributionMeasure) where {T<:Real} = convert_realtype(T, rand(m.d))
@@ -77,8 +80,3 @@ function Base.rand(rng::AbstractRNG, ::Type{T}, m::PowerMeasure{<:DistributionMe
     flat_data = _flat_powrand(rng, T, m.parent.d, map(length, m.axes))
     ArrayOfSimilarArrays{T,M,N}(flat_data)
 end
-
-
-@inline MeasureBase.insupport(m::DistributionMeasure) = MeasureBase.insupport(m.d)
-@inline MeasureBase.paramnames(m::DistributionMeasure) = MeasureBase.paramnames(m.d)
-@inline MeasureBase.params(m::DistributionMeasure) = MeasureBase.params(m.d)
