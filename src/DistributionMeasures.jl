@@ -52,6 +52,7 @@ export MeasureLike
 
 include("utils.jl")
 include("autodiff_utils.jl")
+include("measure_interface.jl")
 include("stdnormal_measure.jl")
 include("standard_dist.jl")
 include("standard_uniform.jl")

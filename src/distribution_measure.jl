@@ -1,9 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-@inline MeasureBase.insupport(d::Distribution) = Distributions.insuinsupportpport(d)
-@inline MeasureBase.paramnames(d::Distribution) = propertynames(d)
-@inline MeasureBase.params(d::Distribution) = NamedTuple{MeasureBase.paramnames(m.d)}(Distributions.params(d))
-
 
 """
     struct DistributionMeasure <: AbstractMeasure
@@ -21,10 +17,6 @@ struct DistributionMeasure{F<:VariateForm,S<:ValueSupport,D<:Distribution{F,S}} 
     d::D
 end
 
-#!!!!!!!!!!!!!!!!! Interface
-@inline MeasureBase.insupport(m::DistributionMeasure) = MeasureBase.insupport(m.d)
-@inline MeasureBase.paramnames(m::DistributionMeasure) = MeasureBase.paramnames(m.d)
-@inline MeasureBase.params(m::DistributionMeasure) = MeasureBase.params(m.d)
 
 @inline MeasureBase.AbstractMeasure(d::Distribution) = DistributionMeasure(d)
 
@@ -38,20 +30,19 @@ end
 @inline Base.convert(::Type{Distribution{F}}, m::DistributionMeasure{F}) where {F<:VariateForm} = Distribution(m)
 @inline Base.convert(::Type{Distribution{F,S}}, m::DistributionMeasure{F,S}) where {F<:VariateForm,S<:ValueSupport} = Distribution(m)
 
+
 @inline DensityInterface.densityof(m::DistributionMeasure) = DensityInterface.densityof(m.d)
-@inline DensityInterface.densityof(m::DistributionMeasure, x) = DensityInterface.densityof(m.d, x)
+@inline DensityInterface.densityof(m::DistributionMeasurDistributionMeasuree, x) = DensityInterface.densityof(m.d, x)
 @inline DensityInterface.logdensityof(m::DistributionMeasure) = DensityInterface.logdensityof(m.d)
 @inline DensityInterface.logdensityof(m::DistributionMeasure, x) = DensityInterface.logdensityof(m.d, x)
 
-@inline MeasureBase.logdensity_def(m::DistributionMeasure, x) = DensityInterface.logdensityof(m.d, x)
-@inline MeasureBase.unsafe_logdensityof(m::DistributionMeasure, x) = DensityInterface.logdensityof(m.d, x)
 
-@inline MeasureBase.insupport(m::DistributionMeasure, x) = Distributions.insupport(m.x)
-
-@inline MeasureBase.basemeasure(m::DistributionMeasure{<:ArrayLikeVariate{0},<:Continuous}) = Lebesgue()
-@inline MeasureBase.basemeasure(m::DistributionMeasure{<:ArrayLikeVariate,<:Continuous}) = Lebesgue()^size(m.d)
-@inline MeasureBase.basemeasure(m::DistributionMeasure{<:ArrayLikeVariate{0},<:Discrete}) = Counting()
-@inline MeasureBase.basemeasure(m::DistributionMeasure{<:ArrayLikeVariate,<:Discrete}) = Counting()^size(m.d)
+@inline MeasureBase.logdensity_def(m::DistributionMeasure, x) = MeasureBase.logdensity_def(m.d, x)
+@inline MeasureBase.unsafe_logdensityof(m::DistributionMeasure, x) = MeasureBase.unsafe_logdensityof(m.d, x)
+@inline MeasureBase.insupport(m::DistributionMeasure, x) = MeasureBase.insupport(m.d, x)
+@inline MeasureBase.basemeasure(m::DistributionMeasure) = MeasureBase.basemeasure(m.d)
+@inline MeasureBase.paramnames(m::DistributionMeasure) = MeasureBase.paramnames(m.d)
+@inline MeasureBase.params(m::DistributionMeasure) = MeasureBase.params(m.d)
 
 
 Base.rand(rng::AbstractRNG, ::Type{T}, m::DistributionMeasure) where {T<:Real} = convert_realtype(T, rand(m.d))
