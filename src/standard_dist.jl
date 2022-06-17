@@ -189,3 +189,21 @@ Distributions.truncated(d::StandardDist{D,0}, l::Real, u::Real) where {D} = Dist
 
 Distributions.product_distribution(dists::AbstractVector{StandardDist{D,0}}) where {D} = StandardDist{D}(size(dists)...)
 Distributions.product_distribution(dists::AbstractArray{StandardDist{D,0}}) where {D} = StandardDist{D}(size(dists)...)
+
+
+@inline vartransform_def(::MU, μ::MU, x) where {MU<:StandardDist{<:Any,0}} = x
+
+for (A, B) in [
+    (Uniform, StdUniform),
+    (Exponential, StdExponential),
+    (Logistic, StdLogistic),
+    (Normal, StdNormal)
+]
+    @eval begin
+        @inline MeasureBase.vartransform_origin(d::StandardDist{$A,0}) = $B()
+        @inline MeasureBase.vartransform_origin(d::StandardDist{$A,N}) where N = $B()^size(d)
+    end
+end
+
+@inline MeasureBase.to_origin(ν::StandardDist, x) = x
+@inline MeasureBase.from_origin(ν::StandardDist, x) = x

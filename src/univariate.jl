@@ -1,17 +1,24 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-@inline MeasureBase.getdof(::Distribution{Univariate}) = 1
 
+@inline MeasureBase.getdof(::Distribution{Univariate}) = static(1)
 
 @inline MeasureBase.check_dof(a::Distribution{Univariate}, b::Distribution{Univariate}) = nothing
 
-@inline MeasureBase.vartransform_origin(d::Distribution{Univariate,Continuous}) = StandardUniform()
 
-
-# Use ForwardDiff for univariate distribution transformations:
-@inline function ChainRulesCore.rrule(::typeof(vartransform_def), trg::Distribution{Univariate}, src::Distribution{Univariate}, x::Any)
-    ChainRulesCore.rrule(fwddiff(vartransform_def), trg, src, x)
+# Use ForwardDiff for univariate transformations:
+@inline function ChainRulesCore.rrule(::typeof(vartransform_def), ν::Distribution{Univariate}, μ::Distribution{Univariate}, x::Any)
+    ChainRulesCore.rrule(fwddiff(vartransform_def), ν, μ, x)
 end
+@inline function ChainRulesCore.rrule(::typeof(vartransform_def), ν::MeasureBase.StdMeasure, μ::Distribution{Univariate}, x::Any)
+    ChainRulesCore.rrule(fwddiff(vartransform_def), ν, μ, x)
+end
+@inline function ChainRulesCore.rrule(::typeof(vartransform_def), ν::Distribution{Univariate}, μ::MeasureBase.StdMeasure, x::Any)
+    ChainRulesCore.rrule(fwddiff(vartransform_def), ν, μ, x)
+end
+
+
+# Generic transformations to/from StdUniform via cdf/quantile:
 
 
 _dist_params_numtype(d::Distribution) = promote_type(map(typeof, Distributions.params(d))...)
@@ -90,10 +97,10 @@ end
 end
 
 
-@inline function MeasureBase.to_origin(src::Distribution{Univariate,Continuous}, x::Real)
-    R = _result_numtype(src, x)
-    if Distributions.insupport(src, x)
-        y = _trafo_cdf(src, x)
+@inline function MeasureBase.vartransform_def(::StdUniform, μ::Distribution{Univariate,Continuous}, x)
+    R = _result_numtype(μ, x)
+    if Distributions.insupport(μ, x)
+        y = _trafo_cdf(μ, x)
         convert(R, y)
     else
         convert(R, NaN)
@@ -101,13 +108,13 @@ end
 end
 
 
-@inline function MeasureBase.from_origin(trg::Distribution{Univariate,Continuous}, x::T) where {T <: Real}
-    R = _result_numtype(trg, x)
+@inline function MeasureBase.vartransform_def(ν::Distribution{Univariate,Continuous}, ::StdUniform, x::T) where T
+    R = _result_numtype(ν, x)
     TF = float(T)
     if 0 <= x <= 1
         # Avoid x ≈ 0 and x ≈ 1 to avoid infinite variate values for target distributions with infinite support:
         mod_x = ifelse(x == 0, zero(TF) + eps(TF), ifelse(x == 1, one(TF) - eps(TF), convert(TF, x)))
-        y = _trafo_quantile(trg, mod_x)
+        y = _trafo_quantile(ν, mod_x)
         convert(R, y)
     else
         convert(R, NaN)
@@ -115,38 +122,59 @@ end
 end
 
 
-function _rescaled_to_origin(src::Distribution{Univariate}, x::T) where {T<:Real}
-    src_offs, src_scale = Distributions.location(src), Distributions.scale(src)
+# Use standard measures as transformation origin for scaled/translated equivalents:
+
+function _affine_to_origin(μ::Distribution{Univariate}, x::T) where {T<:Real}
+    src_offs, src_scale = Distributions.location(μ), Distributions.scale(μ)
     y = (x - src_offs) / src_scale
-    convert(_result_numtype(src, x), y)
+    convert(_result_numtype(μ, x), y)
 end
 
-function _origin_to_rescaled(trg::Distribution{Univariate}, x::T) where {T<:Real}
-    trg_offs, trg_scale = Distributions.location(trg), Distributions.scale(trg)
+function _origin_to_affine(ν::Distribution{Univariate}, x::T) where {T<:Real}
+    trg_offs, trg_scale = Distributions.location(ν), Distributions.scale(ν)
     y = muladd(x, trg_scale, trg_offs)
-    convert(_result_numtype(trg, x), y)
+    convert(_result_numtype(ν, x), y)
 end
 
-@inline MeasureBase.vartransform_origin(d::Uniform) = StandardUniform()
-@inline MeasureBase.to_origin(src::Uniform, x::Real) = _rescaled_to_origin(src, x)
-@inline MeasureBase.from_origin(trg::Uniform, x::Real) = _origin_to_rescaled(trg, x)
-
-@inline MeasureBase.vartransform_origin(d::Normal) = StandardNormal()
-@inline MeasureBase.to_origin(src::Normal, x::Real) = _rescaled_to_origin(src, x)
-@inline MeasureBase.from_origin(trg::Normal, x::Real) = _origin_to_rescaled(trg, x)
-
-@inline MeasureBase.vartransform_def(::StandardUniform, ::StandardNormal, x::Real) = StatsFuns.normcdf(x)
-@inline MeasureBase.vartransform_def(::StandardNormal, ::StandardUniform, x::Real) = StatsFuns.norminvcdf(x)
-
-
-function MeasureBase.vartransform_def(trg::Distribution{Univariate}, src::StandardDist{D,1}, x::AbstractVector{<:Real}) where D
-    @_adignore if !(size(src) == size(x) == (1,))
-        throw(ArgumentError("Length of src and length of x must be one"))
+for (A, B) in [
+    (Uniform, StdUniform),
+    (Logistic, StdLogistic),
+    (Normal, StdNormal)
+]
+    @eval begin
+        @inline MeasureBase.vartransform_origin($A) = $B()
+        @inline MeasureBase.to_origin(ν::$A, y) = _affine_to_origin(ν, y)
+        @inline MeasureBase.from_origin(ν::$A, x) = _origin_to_rescaled(ν, x)
     end
-    return vartransform_def(trg, StandardDist{D}(), first(x))
 end
 
-function MeasureBase.vartransform_def(trg::StandardDist{D,1}, src::Distribution{Univariate}, x::Real) where D
-    @_adignore size(trg) == (1,) || throw(ArgumentError("Length of trg must be one"))
-    return Fill(vartransform_def(StandardDist{D}(), src, x))
+@inline MeasureBase.vartransform_origin(::Exponential) = StdExponential()
+@inline MeasureBase.to_origin(ν::Exponential, y) = scale(ν) \ y
+@inline MeasureBase.from_origin(ν::Exponential, x) = scale(ν) * x
+
+
+
+# Transform between univariate and single-element power measure
+
+function vartransform_def(ν::Distributions{Uniform}, μ::PowerMeasure{<:StdMeasure}, x)
+    check_dof(ν, μ)
+    return vartransform_def(ν, μ.parent, only(x))
+end
+
+function vartransform_def(ν::PowerMeasure{<:StdMeasure}, μ::Distributions{Uniform}, x)
+    check_dof(ν, μ)
+    return Fill(vartransform_def(ν.parent, μ, only(x)), map(length, ν.axes)...)
+end
+
+
+# Transform between univariate and single-element standard multivariate
+
+function vartransform_def(ν::Distributions{Uniform}, μ::StandardDist{D,1}, x) where D
+    check_dof(ν, μ)
+    return vartransform_def(ν, StandardDist{D,0}(), only(x))
+end
+
+function vartransform_def(ν::StandardDist{D,1}, μ::Distributions{Uniform}, x) where D
+    check_dof(ν, μ)
+    return Fill(vartransform_def(StandardDist{D,0}(), μ, only(x)), map(length, ν.axes)...)
 end
