@@ -44,11 +44,11 @@ include("getjacobian.jl")
     function test_dist_trafo_moments(trg, src)
         unshaped(x) = first(torv_and_back(x))
         @testset "check moments of trafo $(typeof(trg).name) <- $(typeof(src).name)" begin
-            X = reshaped_rand(src, 10^6)
+            X = reshaped_rand(src, 10^5)
             Y = vartransform(trg, src).(X)
             Y_ref = reshaped_rand(trg, 10^6)
-            @test isapprox(mean(Y), mean(Y_ref), rtol = 0.5)
-            @test isapprox(cov(Y), cov(Y_ref), rtol = 0.5)
+            @test isapprox(mean(unshaped.(Y)), mean(unshaped.(Y_ref)), rtol = 0.5)
+            @test isapprox(cov(unshaped.(Y)), cov(unshaped.(Y_ref)), rtol = 0.5)
         end
     end
 
