@@ -87,6 +87,14 @@ include("getjacobian.jl")
     test_back_and_forth(gamma, stduvnorm)
     test_back_and_forth(gamma, beta)
 
+    test_back_and_forth(mvnorm, stdmvuni2)
+    test_back_and_forth(stdmvuni2, mvnorm)
+
+    test_back_and_forth(mvnorm, standnorm2_reshaped)
+    test_back_and_forth(standnorm2_reshaped, mvnorm)
+    test_back_and_forth(stdmvnorm2, standnorm2_reshaped)
+    test_back_and_forth(standnorm2_reshaped, standnorm2_reshaped)
+
     test_dist_trafo_moments(normal2, normal1)
     test_dist_trafo_moments(uniform2, uniform1)
 
@@ -95,16 +103,6 @@ include("getjacobian.jl")
 
     test_dist_trafo_moments(mvnorm, stdmvnorm2)
     test_dist_trafo_moments(dirich, stdmvnorm1)
-
-    test_dist_trafo_moments(mvnorm, stdmvuni2)
-    test_dist_trafo_moments(stdmvuni2, mvnorm)
-
-    test_dist_trafo_moments(stdmvnorm2, stdmvuni2)
-
-    test_dist_trafo_moments(mvnorm, standnorm2_reshaped)
-    test_dist_trafo_moments(standnorm2_reshaped, mvnorm)
-    test_dist_trafo_moments(stdmvnorm2, standnorm2_reshaped)
-    test_dist_trafo_moments(standnorm2_reshaped, standnorm2_reshaped)
 
     let
         mvuni = product_distribution([Uniform(), Uniform()])
