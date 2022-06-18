@@ -1,9 +1,9 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-MeasureBase.getdof(d::ReshapedDistribution) = MeasureBase.getdof(d.dist)
+MeasureBase.getdof(μ::ReshapedDistribution) = MeasureBase.getdof(μ.dist)
 
-MeasureBase.vartransform_origin(d::ReshapedDistribution) = d.dist
+MeasureBase.vartransform_origin(μ::ReshapedDistribution) = μ.dist
 
-MeasureBase.to_origin(src::ReshapedDistribution, x) = reshape(x, size(src.dist))
+MeasureBase.to_origin(ν::ReshapedDistribution, y) = reshape(y, size(ν.dist))
 
-MeasureBase.from_origin(trg::ReshapedDistribution, x) = reshape(x, trg.dims)
+MeasureBase.from_origin(ν::ReshapedDistribution, x) = reshape(x, ν.dims)

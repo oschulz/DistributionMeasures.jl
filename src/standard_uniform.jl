@@ -1,16 +1,12 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
 """
-    const StandardUniform = StandardDist{Uniform,0}
+    const StandardUniform{N} = StandardDist{Uniform,N}
 
 The univariate standard uniform distribution.
 """
-const StandardUniform = StandardDist{Uniform,0}
+const StandardUniform{N} = StandardDist{Uniform,N}
 export StandardUniform
-
-# Ultimate intermediate distributions can't have a transform origin:
-@inline MeasureBase.vartransform_origin(::StandardDist{Uniform,0}) = NoTransformOrigin{StandardDist{Uniform,0}}()
-@inline MeasureBase.vartransform_origin(::StandardDist{Uniform,1}) = NoTransformOrigin{StandardDist{Uniform,1}}()
 
 Distributions.Uniform(d::StandardDist{Uniform,0}) = Distributions.Uniform()
 Base.convert(::Type{Distributions.Uniform}, d::StandardDist{Uniform,1}) = Distributions.Uniform(d)

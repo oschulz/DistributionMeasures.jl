@@ -2,7 +2,7 @@
 
 MeasureBase.getdof(d::Dirichlet) = length(d) - 1
 
-MeasureBase.vartransform_origin(trg::Dirichlet) = StandardDist{Uniform,1}(getdof(trg))
+MeasureBase.vartransform_origin(trg::Dirichlet) = StdUniform()^getdof(trg)
 
 function MeasureBase.from_origin(trg::Dirichlet, x::AbstractVector{<:Real})
     to_dirichlet(trg.alpha, src, x)
@@ -24,7 +24,9 @@ function to_dirichlet(alpha::AbstractVector{<:Real}, src::StandardDist{Uniform,1
     # See M. J. Betancourt, "Cruising The Simplex: Hamiltonian Monte Carlo and the Dirichlet Distribution",
     # https://arxiv.org/abs/1010.3436
 
+    # Sanity check (TODO - remove?):
     @_adignore @argcheck length(trg) == length(src) + 1
+
     αs = _dropfront(_rev_cumsum(trg.alpha))
     βs = _dropback(trg.alpha)
     beta_v = fwddiff(_dirichlet_beta_trafo).(αs, βs, x)

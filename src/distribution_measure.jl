@@ -22,7 +22,7 @@ end
 
 @inline Base.convert(::Type{AbstractMeasure}, d::Distribution) = DistributionMeasure(d)
 
-@inline Distributions.Distribution(m::DistributionMeasure) = m.distribution
+@inline Distributions.Distribution(m::DistributionMeasure) = m.d
 @inline Distributions.Distribution{F}(m::DistributionMeasure{F}) where {F<:VariateForm} = Distribution(m)
 @inline Distributions.Distribution{F,S}(m::DistributionMeasure{F,S}) where {F<:VariateForm,S<:ValueSupport} = Distribution(m)
 
@@ -31,18 +31,20 @@ end
 @inline Base.convert(::Type{Distribution{F,S}}, m::DistributionMeasure{F,S}) where {F<:VariateForm,S<:ValueSupport} = Distribution(m)
 
 
-@inline DensityInterface.densityof(m::DistributionMeasure) = DensityInterface.densityof(m.d)
-@inline DensityInterface.densityof(m::DistributionMeasurDistributionMeasuree, x) = DensityInterface.densityof(m.d, x)
-@inline DensityInterface.logdensityof(m::DistributionMeasure) = DensityInterface.logdensityof(m.d)
-@inline DensityInterface.logdensityof(m::DistributionMeasure, x) = DensityInterface.logdensityof(m.d, x)
+@inline DensityInterface.densityof(μ::DistributionMeasure) = DensityInterface.densityof(μ.d)
+@inline DensityInterface.densityof(μ::DistributionMeasure, x) = DensityInterface.densityof(μ.d, x)
+@inline DensityInterface.logdensityof(μ::DistributionMeasure) = DensityInterface.logdensityof(μ.d)
+@inline DensityInterface.logdensityof(μ::DistributionMeasure, x) = DensityInterface.logdensityof(μ.d, x)
 
-
-@inline MeasureBase.logdensity_def(m::DistributionMeasure, x) = MeasureBase.logdensity_def(m.d, x)
-@inline MeasureBase.unsafe_logdensityof(m::DistributionMeasure, x) = MeasureBase.unsafe_logdensityof(m.d, x)
-@inline MeasureBase.insupport(m::DistributionMeasure, x) = MeasureBase.insupport(m.d, x)
-@inline MeasureBase.basemeasure(m::DistributionMeasure) = MeasureBase.basemeasure(m.d)
-@inline MeasureBase.paramnames(m::DistributionMeasure) = MeasureBase.paramnames(m.d)
-@inline MeasureBase.params(m::DistributionMeasure) = MeasureBase.params(m.d)
+@inline MeasureBase.logdensity_def(μ::DistributionMeasure, x) = MeasureBase.logdensity_def(μ.d, x)
+@inline MeasureBase.unsafe_logdensityof(μ::DistributionMeasure, x) = MeasureBase.unsafe_logdensityof(μ.d, x)
+@inline MeasureBase.insupport(μ::DistributionMeasure, x) = MeasureBase.insupport(μ.d, x)
+@inline MeasureBase.basemeasure(μ::DistributionMeasure) = MeasureBase.basemeasure(μ.d)
+@inline MeasureBase.paramnames(μ::DistributionMeasure) = MeasureBase.paramnames(μ.d)
+@inline MeasureBase.params(μ::DistributionMeasure) = MeasureBase.params(μ.d)
+@inline MeasureBase.vartransform_origin(ν::DistributionMeasure) = ν.d
+@inline MeasureBase.to_origin(::DistributionMeasure, y) = y
+@inline MeasureBase.from_origin(::DistributionMeasure, x) = x
 
 
 Base.rand(rng::AbstractRNG, ::Type{T}, m::DistributionMeasure) where {T<:Real} = convert_realtype(T, rand(m.d))

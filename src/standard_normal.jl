@@ -1,11 +1,11 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
 """
-    const StandardNormal = StandardDist{Normal,0}
+    const StandardNormal{N} = StandardDist{Normal,N}
 
 The univariate standard normal distribution.
 """
-const StandardNormal = StandardDist{Normal,0}
+const StandardNormal{N} = StandardDist{Normal,N}
 export StandardNormal
 
 Distributions.Normal(d::StandardDist{Normal,0}) = Distributions.Normal()
