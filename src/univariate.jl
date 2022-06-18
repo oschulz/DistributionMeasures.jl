@@ -124,16 +124,16 @@ end
 
 # Use standard measures as transformation origin for scaled/translated equivalents:
 
+function _origin_to_affine(ν::Distribution{Univariate}, y::T) where {T<:Real}
+    trg_offs, trg_scale = Distributions.location(ν), Distributions.scale(ν)
+    x = muladd(y, trg_scale, trg_offs)
+    convert(_result_numtype(ν, y), x)
+end
+
 function _affine_to_origin(μ::Distribution{Univariate}, x::T) where {T<:Real}
     src_offs, src_scale = Distributions.location(μ), Distributions.scale(μ)
     y = (x - src_offs) / src_scale
     convert(_result_numtype(μ, x), y)
-end
-
-function _origin_to_affine(ν::Distribution{Univariate}, x::T) where {T<:Real}
-    trg_offs, trg_scale = Distributions.location(ν), Distributions.scale(ν)
-    y = muladd(x, trg_scale, trg_offs)
-    convert(_result_numtype(ν, x), y)
 end
 
 for (A, B) in [
