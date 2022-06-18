@@ -136,4 +136,21 @@ include("getjacobian.jl")
         f = inverse(vartransform(Normal, Dirichlet([3.0, 4.0, 5.0, 6.0, 7.0])))
         @test isapprox(ForwardDiff.jacobian(f, x), Zygote.jacobian(f, x)[1], rtol = 10^-4)
     end
+
+
+    @testset "vartransform autosel" begin
+        for (M,R) in [
+            (StandardNormal, StandardNormal)
+            (Normal, StandardNormal)
+            (StandardUniform, StandardUniform)
+            (Uniform, StandardUniform)
+        ]
+            @test @inferred(vartransform(M, Weibull())) == vartransform(R(), Weibull())
+            @test @inferred(vartransform(Weibull(), M)) == vartransform(Weibull(), R())
+            @test @inferred(vartransform(M, MvNormal(float(I(5))))) == vartransform(R(5), MvNormal(float(I(5))))
+            @test @inferred(vartransform(MvNormal(float(I(5))), M)) == vartransform(MvNormal(float(I(5))), R(5))
+            @test @inferred(vartransform(M, StdExponential()^(2,3))) == vartransform(R(6), StdExponential()^(2,3))
+            @test @inferred(vartransform(StdExponential()^(2,3), M)) == vartransform(StdExponential()^(2,3), R(6))
+        end
+    end
 end
