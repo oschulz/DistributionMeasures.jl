@@ -2,7 +2,7 @@
 
 module DistributionMeasures
 
-using LinearAlgebra: Diagonal, dot
+using LinearAlgebra: Diagonal, dot, cholesky
 
 import Random
 using Random: AbstractRNG, rand!
@@ -11,7 +11,7 @@ import DensityInterface
 using DensityInterface: logdensityof
 
 import MeasureBase
-using MeasureBase: AbstractMeasure, Lebesgue, Counting
+using MeasureBase: AbstractMeasure, Lebesgue, Counting, ℝ
 using MeasureBase: StdMeasure, StdUniform, StdExponential, StdLogistic
 using MeasureBase: PowerMeasure, WeightedMeasure
 using MeasureBase: getdof, checked_var

@@ -9,7 +9,7 @@ using Distributions, ArraysOfArrays
 import ForwardDiff, Zygote
 
 using MeasureBase: vartransform, vartransform_def, vartransform_origin
-using DistributionsMeasures: _trafo_cdf, _trafo_quantile
+using DistributionMeasures: _trafo_cdf, _trafo_quantile
 
 using ParameterHandling: flatten
 
@@ -38,14 +38,17 @@ include("getjacobian.jl")
         end
     end
 
+    reshaped_rand(d::Distribution{Univariate}, n) = rand(d, n)
+    reshaped_rand(d::Distribution{Multivariate}, n) = nestedview(rand(d, n))
+
     function test_dist_trafo_moments(trg, src)
         unshaped(x) = first(torv_and_back(x))
         @testset "check moments of trafo $(typeof(trg).name) <- $(typeof(src).name)" begin
-            X = rand(src, 10^6)
+            X = reshaped_rand(src, 10^6)
             Y = vartransform(trg, src).(X)
-            Y_ref = rand(trg, 10^6)
-            @test isapprox(mean(unshaped.(Y)), mean(unshaped.(Y_ref)), rtol = 0.5)
-            @test isapprox(cov(unshaped.(Y)), cov(unshaped.(Y_ref)), rtol = 0.5)
+            Y_ref = reshaped_rand(trg, 10^6)
+            @test isapprox(mean(Y), mean(Y_ref), rtol = 0.5)
+            @test isapprox(cov(Y), cov(Y_ref), rtol = 0.5)
         end
     end
 

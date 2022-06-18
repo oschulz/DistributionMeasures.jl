@@ -144,7 +144,7 @@ for (A, B) in [
     @eval begin
         @inline MeasureBase.vartransform_origin(::$A) = $B()
         @inline MeasureBase.to_origin(ν::$A, y) = _affine_to_origin(ν, y)
-        @inline MeasureBase.from_origin(ν::$A, x) = _origin_to_rescaled(ν, x)
+        @inline MeasureBase.from_origin(ν::$A, x) = _origin_to_affine(ν, x)
     end
 end
 
