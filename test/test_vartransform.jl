@@ -108,16 +108,14 @@ include("getjacobian.jl")
         mvuni = product_distribution([Uniform(), Uniform()])
 
         x = rand()
-        @test_throws ArgumentError vartransform_def(stduvnorm, mvnorm, x)
-        @test_throws ArgumentError vartransform_def(stduvnorm, stdmvnorm1, x)
-        @test_throws ArgumentError vartransform_def(stduvnorm, stdmvnorm2, x)
+        @test_throws ArgumentError vartransform(stduvnorm, mvnorm)(x)
+        @test_throws ArgumentError vartransform(stduvnorm, stdmvnorm1)(x)
+        @test_throws ArgumentError vartransform(stduvnorm, stdmvnorm2)(x)
 
         x = rand(2)
-        @test_throws ArgumentError vartransform_def(mvuni, mvnorm, x)
-        @test_throws ArgumentError vartransform_def(mvnorm, mvuni, x)
-        @test_throws ArgumentError vartransform_def(stduvnorm, mvnorm, x)
-        @test_throws ArgumentError vartransform_def(stduvnorm, stdmvnorm1, x)
-        @test_throws ArgumentError vartransform_def(stduvnorm, stdmvnorm2, x)
+        @test_throws ArgumentError vartransform(stduvnorm, mvnorm)(x)
+        @test_throws ArgumentError vartransform(stduvnorm, stdmvnorm1)(x)
+        @test_throws ArgumentError vartransform(stduvnorm, stdmvnorm2)(x)
     end
 
     @testset "Custom cdf and quantile for dual numbers" begin

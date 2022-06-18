@@ -157,12 +157,10 @@ end
 # Transform between univariate and single-element power measure
 
 function MeasureBase.vartransform_def(ν::Distribution{Univariate}, μ::PowerMeasure{<:StdMeasure}, x)
-    check_dof(ν, μ)
     return vartransform_def(ν, μ.parent, only(x))
 end
 
 function MeasureBase.vartransform_def(ν::PowerMeasure{<:StdMeasure}, μ::Distribution{Univariate}, x)
-    check_dof(ν, μ)
     return Fill(vartransform_def(ν.parent, μ, only(x)), map(length, ν.axes)...)
 end
 
@@ -170,11 +168,9 @@ end
 # Transform between univariate and single-element standard multivariate
 
 function MeasureBase.vartransform_def(ν::Distribution{Univariate}, μ::StandardDist{D,1}, x) where D
-    check_dof(ν, μ)
     return vartransform_def(ν, StandardDist{D,0}(), only(x))
 end
 
 function MeasureBase.vartransform_def(ν::StandardDist{D,1}, μ::Distribution{Univariate}, x) where D
-    check_dof(ν, μ)
     return Fill(vartransform_def(StandardDist{D,0}(), μ, only(x)), map(length, ν.axes)...)
 end
