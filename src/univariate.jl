@@ -7,14 +7,14 @@
 
 
 # Use ForwardDiff for univariate transformations:
-@inline function ChainRulesCore.rrule(::typeof(vartransform_def), ν::Distribution{Univariate}, μ::Distribution{Univariate}, x::Any)
-    ChainRulesCore.rrule(fwddiff(vartransform_def), ν, μ, x)
+@inline function ChainRulesCore.rrule(::typeof(transport_def), ν::Distribution{Univariate}, μ::Distribution{Univariate}, x::Any)
+    ChainRulesCore.rrule(fwddiff(transport_def), ν, μ, x)
 end
-@inline function ChainRulesCore.rrule(::typeof(vartransform_def), ν::MeasureBase.StdMeasure, μ::Distribution{Univariate}, x::Any)
-    ChainRulesCore.rrule(fwddiff(vartransform_def), ν, μ, x)
+@inline function ChainRulesCore.rrule(::typeof(transport_def), ν::MeasureBase.StdMeasure, μ::Distribution{Univariate}, x::Any)
+    ChainRulesCore.rrule(fwddiff(transport_def), ν, μ, x)
 end
-@inline function ChainRulesCore.rrule(::typeof(vartransform_def), ν::Distribution{Univariate}, μ::MeasureBase.StdMeasure, x::Any)
-    ChainRulesCore.rrule(fwddiff(vartransform_def), ν, μ, x)
+@inline function ChainRulesCore.rrule(::typeof(transport_def), ν::Distribution{Univariate}, μ::MeasureBase.StdMeasure, x::Any)
+    ChainRulesCore.rrule(fwddiff(transport_def), ν, μ, x)
 end
 
 
@@ -97,7 +97,7 @@ end
 end
 
 
-@inline function MeasureBase.vartransform_def(::StdUniform, μ::Distribution{Univariate,Continuous}, x)
+@inline function MeasureBase.transport_def(::StdUniform, μ::Distribution{Univariate,Continuous}, x)
     R = _result_numtype(μ, x)
     if Distributions.insupport(μ, x)
         y = _trafo_cdf(μ, x)
@@ -108,7 +108,7 @@ end
 end
 
 
-@inline function MeasureBase.vartransform_def(ν::Distribution{Univariate,Continuous}, ::StdUniform, x::T) where T
+@inline function MeasureBase.transport_def(ν::Distribution{Univariate,Continuous}, ::StdUniform, x::T) where T
     R = _result_numtype(ν, x)
     TF = float(T)
     if 0 <= x <= 1
@@ -156,21 +156,21 @@ end
 
 # Transform between univariate and single-element power measure
 
-function MeasureBase.vartransform_def(ν::Distribution{Univariate}, μ::PowerMeasure{<:StdMeasure}, x)
-    return vartransform_def(ν, μ.parent, only(x))
+function MeasureBase.transport_def(ν::Distribution{Univariate}, μ::PowerMeasure{<:StdMeasure}, x)
+    return transport_def(ν, μ.parent, only(x))
 end
 
-function MeasureBase.vartransform_def(ν::PowerMeasure{<:StdMeasure}, μ::Distribution{Univariate}, x)
-    return Fill(vartransform_def(ν.parent, μ, only(x)), map(length, ν.axes)...)
+function MeasureBase.transport_def(ν::PowerMeasure{<:StdMeasure}, μ::Distribution{Univariate}, x)
+    return Fill(transport_def(ν.parent, μ, only(x)), map(length, ν.axes)...)
 end
 
 
 # Transform between univariate and single-element standard multivariate
 
-function MeasureBase.vartransform_def(ν::Distribution{Univariate}, μ::StandardDist{D,1}, x) where D
-    return vartransform_def(ν, StandardDist{D,0}(), only(x))
+function MeasureBase.transport_def(ν::Distribution{Univariate}, μ::StandardDist{D,1}, x) where D
+    return transport_def(ν, StandardDist{D,0}(), only(x))
 end
 
-function MeasureBase.vartransform_def(ν::StandardDist{D,1}, μ::Distribution{Univariate}, x) where D
-    return Fill(vartransform_def(StandardDist{D,0}(), μ, only(x)), map(length, ν.axes)...)
+function MeasureBase.transport_def(ν::StandardDist{D,1}, μ::Distribution{Univariate}, x) where D
+    return Fill(transport_def(StandardDist{D,0}(), μ, only(x)), map(length, ν.axes)...)
 end

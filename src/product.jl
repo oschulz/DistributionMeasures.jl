@@ -8,13 +8,13 @@ MeasureBase.getdof(d::_UniformProductDist1) = length(d)
 
 
 function _product_dist_trafo_impl(νs, μs, x)
-    fwddiff(vartransform_def).(νs, μs, x)
+    fwddiff(transport_def).(νs, μs, x)
 end
 
-function MeasureBase.vartransform_def(ν::_StdPowMeasure1, μ::_UniformProductDist1, x)
+function MeasureBase.transport_def(ν::_StdPowMeasure1, μ::_UniformProductDist1, x)
     _product_dist_trafo_impl((ν.parent,), μ.v, x)
 end
 
-function MeasureBase.vartransform_def(ν::_UniformProductDist1, μ::_StdPowMeasure1, x)
+function MeasureBase.transport_def(ν::_UniformProductDist1, μ::_StdPowMeasure1, x)
     _product_dist_trafo_impl(ν.v, (μ.parent,), x)
 end

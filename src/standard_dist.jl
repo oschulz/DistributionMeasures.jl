@@ -30,7 +30,7 @@ function Base.show(io::IO, d::StandardDist{D}) where {D}
 end
 
 
-@inline MeasureBase.vartransform_def(::MU, μ::MU, x) where {MU<:StandardDist{<:Any,0}} = x
+@inline MeasureBase.transport_def(::MU, μ::MU, x) where {MU<:StandardDist{<:Any,0}} = x
 
 for (A, B) in [
     (Uniform, StdUniform),

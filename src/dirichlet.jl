@@ -7,7 +7,7 @@ MeasureBase.vartransform_origin(ν::Dirichlet) = StdUniform()^getdof(ν)
 
 function _dirichlet_beta_trafo(α::Real, β::Real, x::Real)
     R = float(promote_type(typeof(α), typeof(β), typeof(x)))
-    convert(R, vartransform_def(Beta(α, β), StdUniform(), x))::R
+    convert(R, transport_def(Beta(α, β), StdUniform(), x))::R
 end
 
 _a_times_one_minus_b(a::Real, b::Real) = a * (1 - b)

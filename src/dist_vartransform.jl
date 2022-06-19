@@ -12,5 +12,5 @@ _std_measure(::Type{M}, ::StaticInt{1}) where {M<:_AnyStdDistribution} = M()
 _std_measure(::Type{M}, dof::Integer) where {M<:_AnyStdDistribution} = M(dof)
 _std_measure_for(::Type{M}, μ::Any) where {M<:_AnyStdDistribution} = _std_measure(_std_measure(M), getdof(μ))
 
-MeasureBase.vartransform(::Type{NU}, μ) where {NU<:_AnyStdDistribution} = vartransform(_std_measure_for(NU, μ), μ)
-MeasureBase.vartransform(ν, ::Type{MU}) where {MU<:_AnyStdDistribution} = vartransform(ν, _std_measure_for(MU, ν))
+MeasureBase.transport_to(::Type{NU}, μ) where {NU<:_AnyStdDistribution} = transport_to(_std_measure_for(NU, μ), μ)
+MeasureBase.transport_to(ν, ::Type{MU}) where {MU<:_AnyStdDistribution} = transport_to(ν, _std_measure_for(MU, ν))

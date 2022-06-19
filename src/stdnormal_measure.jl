@@ -9,8 +9,8 @@ export StdNormal
 
 @inline MeasureBase.getdof(::StdNormal) = static(1)
 
-@inline MeasureBase.vartransform_def(::StdUniform, μ::StdNormal, x) = StatsFuns.normcdf(x)
-@inline MeasureBase.vartransform_def(::StdNormal, μ::StdUniform, x) = StatsFuns.norminvcdf(x)
+@inline MeasureBase.transport_def(::StdUniform, μ::StdNormal, x) = StatsFuns.normcdf(x)
+@inline MeasureBase.transport_def(::StdNormal, μ::StdUniform, x) = StatsFuns.norminvcdf(x)
 
 @inline Base.rand(rng::Random.AbstractRNG, ::Type{T}, ::StdNormal) where {T} = randn(rng, T)
 

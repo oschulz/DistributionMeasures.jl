@@ -8,7 +8,7 @@ using InverseFunctions, ChangesOfVariables
 using Distributions, ArraysOfArrays
 import ForwardDiff, Zygote
 
-using MeasureBase: vartransform, vartransform_def, vartransform_origin
+using MeasureBase: transport_to, transport_def, vartransform_origin
 using MeasureBase: StdExponential
 using DistributionMeasures: _trafo_cdf, _trafo_quantile
 
@@ -28,12 +28,12 @@ include("getjacobian.jl")
     function test_back_and_forth(trg, src)
         @testset "transform $(typeof(trg).name) <-> $(typeof(src).name)" begin
             x = rand(src)
-            y = vartransform_def(trg, src, x)
-            src_v_reco = vartransform_def(src, trg, y)
+            y = transport_def(trg, src, x)
+            src_v_reco = transport_def(src, trg, y)
 
             @test x ≈ src_v_reco
             
-            f = x -> vartransform_def(trg, src, x)
+            f = x -> transport_def(trg, src, x)
             ref_ladj = logpdf(src, x) - logpdf(trg, y)
             @test ref_ladj ≈ logabsdet(getjacobian(f, x))[1]
         end
@@ -46,7 +46,7 @@ include("getjacobian.jl")
         unshaped(x) = first(torv_and_back(x))
         @testset "check moments of trafo $(typeof(trg).name) <- $(typeof(src).name)" begin
             X = reshaped_rand(src, 10^5)
-            Y = vartransform(trg, src).(X)
+            Y = transport_to(trg, src).(X)
             Y_ref = reshaped_rand(trg, 10^6)
             @test isapprox(mean(unshaped.(Y)), mean(unshaped.(Y_ref)), rtol = 0.5)
             @test isapprox(cov(unshaped.(Y)), cov(unshaped.(Y_ref)), rtol = 0.5)
@@ -110,14 +110,14 @@ include("getjacobian.jl")
             mvuni = product_distribution([Uniform(), Uniform()])
 
             x = rand()
-            @test_throws ArgumentError vartransform(stduvnorm, mvnorm)(x)
-            @test_throws ArgumentError vartransform(stduvnorm, stdmvnorm1)(x)
-            @test_throws ArgumentError vartransform(stduvnorm, stdmvnorm2)(x)
+            @test_throws ArgumentError transport_to(stduvnorm, mvnorm)(x)
+            @test_throws ArgumentError transport_to(stduvnorm, stdmvnorm1)(x)
+            @test_throws ArgumentError transport_to(stduvnorm, stdmvnorm2)(x)
 
             x = rand(2)
-            @test_throws ArgumentError vartransform(stduvnorm, mvnorm)(x)
-            @test_throws ArgumentError vartransform(stduvnorm, stdmvnorm1)(x)
-            @test_throws ArgumentError vartransform(stduvnorm, stdmvnorm2)(x)
+            @test_throws ArgumentError transport_to(stduvnorm, mvnorm)(x)
+            @test_throws ArgumentError transport_to(stduvnorm, stdmvnorm1)(x)
+            @test_throws ArgumentError transport_to(stduvnorm, stdmvnorm2)(x)
         end
     end
 
@@ -133,26 +133,26 @@ include("getjacobian.jl")
 
     @testset "trafo autodiff pullbacks" begin
         x = [0.6, 0.7, 0.8, 0.9]
-        f = vartransform(Dirichlet([3.0, 4.0, 5.0, 6.0, 7.0]), Uniform)
+        f = transport_to(Dirichlet([3.0, 4.0, 5.0, 6.0, 7.0]), Uniform)
         @test isapprox(ForwardDiff.jacobian(f, x), Zygote.jacobian(f, x)[1], rtol = 10^-4)
-        f = inverse(vartransform(Normal, Dirichlet([3.0, 4.0, 5.0, 6.0, 7.0])))
+        f = inverse(transport_to(Normal, Dirichlet([3.0, 4.0, 5.0, 6.0, 7.0])))
         @test isapprox(ForwardDiff.jacobian(f, x), Zygote.jacobian(f, x)[1], rtol = 10^-4)
     end
 
 
-    @testset "vartransform autosel" begin
+    @testset "transport_to autosel" begin
         for (M,R) in [
             (StandardNormal, StandardNormal)
             (Normal, StandardNormal)
             (StandardUniform, StandardUniform)
             (Uniform, StandardUniform)
         ]
-            @test @inferred(vartransform(M, Weibull())) == vartransform(R(), Weibull())
-            @test @inferred(vartransform(Weibull(), M)) == vartransform(Weibull(), R())
-            @test @inferred(vartransform(M, MvNormal(float(I(5))))) == vartransform(R(5), MvNormal(float(I(5))))
-            @test @inferred(vartransform(MvNormal(float(I(5))), M)) == vartransform(MvNormal(float(I(5))), R(5))
-            @test @inferred(vartransform(M, StdExponential()^(2,3))) == vartransform(R(6), StdExponential()^(2,3))
-            @test @inferred(vartransform(StdExponential()^(2,3), M)) == vartransform(StdExponential()^(2,3), R(6))
+            @test @inferred(transport_to(M, Weibull())) == transport_to(R(), Weibull())
+            @test @inferred(transport_to(Weibull(), M)) == transport_to(Weibull(), R())
+            @test @inferred(transport_to(M, MvNormal(float(I(5))))) == transport_to(R(5), MvNormal(float(I(5))))
+            @test @inferred(transport_to(MvNormal(float(I(5))), M)) == transport_to(MvNormal(float(I(5))), R(5))
+            @test @inferred(transport_to(M, StdExponential()^(2,3))) == transport_to(R(6), StdExponential()^(2,3))
+            @test @inferred(transport_to(StdExponential()^(2,3), M)) == transport_to(StdExponential()^(2,3), R(6))
         end
     end
 end
