@@ -2,7 +2,7 @@
 
 MeasureBase.getdof(μ::ReshapedDistribution) = MeasureBase.getdof(μ.dist)
 
-MeasureBase.vartransform_origin(μ::ReshapedDistribution) = μ.dist
+MeasureBase.transport_origin(μ::ReshapedDistribution) = μ.dist
 
 MeasureBase.to_origin(ν::ReshapedDistribution, y) = reshape(y, size(ν.dist))
 

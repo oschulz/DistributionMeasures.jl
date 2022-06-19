@@ -2,7 +2,7 @@
 
 MeasureBase.getdof(d::Dirichlet) = length(d) - 1
 
-MeasureBase.vartransform_origin(ν::Dirichlet) = StdUniform()^getdof(ν)
+MeasureBase.transport_origin(ν::Dirichlet) = StdUniform()^getdof(ν)
 
 
 function _dirichlet_beta_trafo(α::Real, β::Real, x::Real)

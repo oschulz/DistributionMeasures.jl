@@ -42,7 +42,7 @@ end
 @inline MeasureBase.basemeasure(μ::DistributionMeasure) = MeasureBase.basemeasure(μ.d)
 @inline MeasureBase.paramnames(μ::DistributionMeasure) = MeasureBase.paramnames(μ.d)
 @inline MeasureBase.params(μ::DistributionMeasure) = MeasureBase.params(μ.d)
-@inline MeasureBase.vartransform_origin(ν::DistributionMeasure) = ν.d
+@inline MeasureBase.transport_origin(ν::DistributionMeasure) = ν.d
 @inline MeasureBase.to_origin(::DistributionMeasure, y) = y
 @inline MeasureBase.from_origin(::DistributionMeasure, x) = x
 

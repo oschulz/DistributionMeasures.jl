@@ -6,4 +6,5 @@ using Test
     include("test_standard_dist.jl")
     include("test_standard_uniform.jl")
     include("test_standard_normal.jl")
+    include("test_transport.jl")
 end

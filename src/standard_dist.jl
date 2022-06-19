@@ -39,8 +39,8 @@ for (A, B) in [
     (Normal, StdNormal)
 ]
     @eval begin
-        @inline MeasureBase.vartransform_origin(d::StandardDist{$A,0}) = $B()
-        @inline MeasureBase.vartransform_origin(d::StandardDist{$A,N}) where N = $B()^size(d)
+        @inline MeasureBase.transport_origin(d::StandardDist{$A,0}) = $B()
+        @inline MeasureBase.transport_origin(d::StandardDist{$A,N}) where N = $B()^size(d)
     end
 end
 

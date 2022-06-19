@@ -8,7 +8,7 @@ using InverseFunctions, ChangesOfVariables
 using Distributions, ArraysOfArrays
 import ForwardDiff, Zygote
 
-using MeasureBase: transport_to, transport_def, vartransform_origin
+using MeasureBase: transport_to, transport_def, transport_origin
 using MeasureBase: StdExponential
 using DistributionMeasures: _trafo_cdf, _trafo_quantile
 
