@@ -12,19 +12,10 @@ using MeasureBase: transport_to, transport_def, transport_origin
 using MeasureBase: StdExponential
 using DistributionMeasures: _trafo_cdf, _trafo_quantile
 
-using ParameterHandling: flatten
-
 include("getjacobian.jl")
 
 
 @testset "test_distribution_transform" begin
-    function compute_ladj(f, x)
-        flat_x, to_x = flatten(float.(x))
-        vf(flat_x) = first(flatten(f(to_x(flat_x))))
-        J = ForwardDiff.jacobian(vf, flat_x)
-        J isa Real ? log(abs(J)) : logabsdet(J)
-    end
-
     function test_back_and_forth(trg, src)
         @testset "transform $(typeof(trg).name) <-> $(typeof(src).name)" begin
             x = rand(src)
