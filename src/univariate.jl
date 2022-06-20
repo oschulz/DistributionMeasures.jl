@@ -172,5 +172,5 @@ function MeasureBase.transport_def(ν::Distribution{Univariate}, μ::StandardDis
 end
 
 function MeasureBase.transport_def(ν::StandardDist{D,1}, μ::Distribution{Univariate}, x) where D
-    return Fill(transport_def(StandardDist{D,0}(), μ, only(x)), map(length, ν.axes)...)
+    return Fill(transport_def(StandardDist{D,0}(), μ, only(x)), size(ν)...)
 end
