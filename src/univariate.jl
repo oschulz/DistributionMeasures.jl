@@ -168,9 +168,9 @@ end
 # Transform between univariate and single-element standard multivariate
 
 function MeasureBase.transport_def(ν::Distribution{Univariate}, μ::StandardDist{D,1}, x) where D
-    return transport_def(ν, StandardDist{D,0}(), only(x))
+    return transport_def(ν, StandardDist{D}(), only(x))
 end
 
 function MeasureBase.transport_def(ν::StandardDist{D,1}, μ::Distribution{Univariate}, x) where D
-    return Fill(transport_def(StandardDist{D,0}(), μ, only(x)), size(ν)...)
+    return Fill(transport_def(StandardDist{D}(), μ, only(x)), size(ν)...)
 end

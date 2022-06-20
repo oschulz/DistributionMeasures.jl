@@ -3,7 +3,7 @@
 
 MeasureBase.getdof(ν::MvNormal) = length(ν)
 
-MeasureBase.transport_origin(ν::MvNormal) = StandardDist{Normal,1}(length(ν))
+MeasureBase.transport_origin(ν::MvNormal) = StandardDist{Normal}(length(ν))
 
 function MeasureBase.from_origin(ν::MvNormal, x)
     A = cholesky(ν.Σ).L

@@ -45,8 +45,8 @@ include("getjacobian.jl")
     end
 
     @testset "transforms-tests" begin
-        stduvuni = StandardDist{Uniform,0}()
-        stduvnorm = StandardDist{Uniform,0}()
+        stduvuni = StandardDist{Uniform}()
+        stduvnorm = StandardDist{Uniform}()
 
         uniform1 = Uniform(-5.0, -0.01)
         uniform2 = Uniform(0.01, 5.0)

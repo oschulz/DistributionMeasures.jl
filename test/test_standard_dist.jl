@@ -29,10 +29,8 @@ import ForwardDiff, ChainRulesTestUtils
 
             @test @inferred(StandardDist{D}(sz...)) isa StandardDist{D}
             @test @inferred(StandardDist{D}(sz...)) isa StandardDist{D}
-            @test @inferred(StandardDist{D,N}(sz...)) isa StandardDist{D}
             @test @inferred(size(StandardDist{D}(sz...))) == size(dref)
             @test @inferred(size(StandardDist{D}(sz...))) == size(dref)
-            @test @inferred(size(StandardDist{D,N}(sz...))) == size(dref)
 
             d = StandardDist{D}(sz...)
 
@@ -98,8 +96,8 @@ import ForwardDiff, ChainRulesTestUtils
 
                 @test @inferred(truncated(d, quantile(dref, 1//3), quantile(dref, 2//3))) == truncated(dref, quantile(dref, 1//3), quantile(dref, 2//3))
 
-                @test @inferred(product_distribution(fill(d, 3))) == StandardDist{D}(3)
-                @test @inferred(product_distribution(fill(d, 3, 4))) == StandardDist{D}(3, 4)
+                @test @inferred(product_distribution(fill(d, 3))) == StandardDist{typeof(d)}(3)
+                @test @inferred(product_distribution(fill(d, 3, 4))) == StandardDist{typeof(d)}(3, 4)
             end
 
             if length(size(d)) == 1

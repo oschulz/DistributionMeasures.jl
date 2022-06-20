@@ -75,20 +75,20 @@ using StableRNGs
         @test truncated(StandardDist{Normal}(), -2.2f0, 3.1f0) == truncated(Normal(0.0, 1.0), -2.2f0, 3.1f0)
 
         @test @inferred(product_distribution(fill(StandardDist{Normal}(), 3))) isa StandardDist{Normal,1}
-        @test product_distribution(fill(StandardDist{Normal}(), 3)) == StandardDist{Normal,1}(3)
+        @test product_distribution(fill(StandardDist{Normal}(), 3)) == StandardDist{Normal}(3)
     end
 
 
     @testset "StandardDist{Normal,1}" begin
-        @test @inferred(StandardDist{Normal,1}(3)) isa StandardDist{Normal,1}
-        @test @inferred(StandardDist{Normal,1}(3)) isa StandardDist{Normal,1}
-        @test @inferred(StandardDist{Normal,1}(3)) isa StandardDist{Normal,1}
+        @test @inferred(StandardDist{Normal}(3)) isa StandardDist{Normal,1}
+        @test @inferred(StandardDist{Normal}(3)) isa StandardDist{Normal,1}
+        @test @inferred(StandardDist{Normal}(3)) isa StandardDist{Normal,1}
 
-        @test @inferred(MvNormal(StandardDist{Normal,1}(3))) isa MvNormal{Int}
-        @test @inferred(MvNormal(StandardDist{Normal,1}(3))) == MvNormal(ScalMat(3, 1.0))
-        @test @inferred(convert(MvNormal, StandardDist{Normal,1}(3))) == MvNormal(ScalMat(3, 1.0))
+        @test @inferred(MvNormal(StandardDist{Normal}(3))) isa MvNormal{Int}
+        @test @inferred(MvNormal(StandardDist{Normal}(3))) == MvNormal(ScalMat(3, 1.0))
+        @test @inferred(convert(MvNormal, StandardDist{Normal}(3))) == MvNormal(ScalMat(3, 1.0))
 
-        d = StandardDist{Normal,1}(3)
+        d = StandardDist{Normal}(3)
         dref = MvNormal(ScalMat(3, 1.0))
 
         @test @inferred(eltype(typeof(d))) == eltype(typeof(dref))

@@ -76,12 +76,12 @@ using ForwardDiff
         @test truncated(StandardDist{Uniform}(), 0.2f0, 0.7f0) == Uniform(0.2f0, 0.7f0)
 
         @test @inferred(product_distribution(fill(StandardDist{Uniform}(), 3))) isa DistributionMeasures.StandardDist{Uniform,1}
-        @test product_distribution(fill(StandardDist{Uniform}(), 3)) == DistributionMeasures.StandardDist{Uniform,1}(3)
+        @test product_distribution(fill(StandardDist{Uniform}(), 3)) == DistributionMeasures.StandardDist{Uniform}(3)
     end
 
 
     @testset "StandardDist{Uniform,1}" begin
-        d = DistributionMeasures.StandardDist{Uniform,1}(3)
+        d = DistributionMeasures.StandardDist{Uniform}(3)
         dref = product_distribution(fill(Uniform(), 3))
 
         @test @inferred(eltype(typeof(d))) == eltype(typeof(dref))
