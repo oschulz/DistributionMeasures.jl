@@ -15,8 +15,8 @@ import MeasureBase
 
     for d in [c0, c1, d0, d1]
         x = rand(d)
-        @inline @inferred(MeasureBase.logdensity_def(d, x)) == Distributions.logpdf(d, x)
-        @inline @inferred(MeasureBase.unsafe_logdensityof(d, x)) == Distributions.logpdf(d, x)
+        @test @inferred(MeasureBase.logdensity_def(d, x)) == Distributions.logpdf(d, x)
+        @test @inferred(MeasureBase.unsafe_logdensityof(d, x)) == Distributions.logpdf(d, x)
 
         MeasureBase.Interface.test_interface(d)
     end
@@ -33,5 +33,10 @@ import MeasureBase
     @test @inferred(MeasureBase.insupport(d1, [1.1, 2.2])) == false
 
     @test MeasureBase.paramnames(c0) == (:α, :θ)
-    @test @inferred(MeasureBase.params(c0)) == (α = 0.7, θ = 1.3)
+    if VERSION >= v"1.8"
+        @test @inferred(MeasureBase.params(c0)) == (α = 0.7, θ = 1.3)
+    else
+        # v1.6 can't type-infer this:
+        @test (MeasureBase.params(c0)) == (α = 0.7, θ = 1.3)
+    end
 end
