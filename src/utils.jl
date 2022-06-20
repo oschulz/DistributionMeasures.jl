@@ -13,7 +13,7 @@ ChainRulesCore.rrule(::typeof(convert_realtype), ::Type{T}, x) where T = convert
 
 @inline convert_realtype(::Type{T}, x::T) where {T<:Real} = x
 @inline convert_realtype(::Type{T}, x::AbstractArray{T}) where {T<:Real} = x
-@inline convert_realtype(::Type{T}, x::U) where {T<:Real,U<:Real} = T(X)
+@inline convert_realtype(::Type{T}, x::U) where {T<:Real,U<:Real} = T(x)
 convert_realtype(::Type{T}, x::AbstractArray{U}) where {T<:Real,U<:Real} = T.(x)
 convert_realtype(::Type{T}, x) where {T<:Real} = fmap(elem -> convert_realtype(T, elem), x)
 

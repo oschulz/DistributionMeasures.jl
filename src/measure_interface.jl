@@ -10,6 +10,6 @@
 @inline MeasureBase.basemeasure(d::Distribution{<:ArrayLikeVariate{0},<:Discrete}) = Counting()
 @inline MeasureBase.basemeasure(d::Distribution{<:ArrayLikeVariate,<:Discrete}) = Counting()^size(d)
 
-@inline MeasureBase.insupport(d::Distribution) = Distributions.insuinsupportpport(d)
+@inline MeasureBase.insupport(d::Distribution, x) = Distributions.insupport(d, x)
 @inline MeasureBase.paramnames(d::Distribution) = propertynames(d)
 @inline MeasureBase.params(d::Distribution) = NamedTuple{MeasureBase.paramnames(m.d)}(Distributions.params(d))
