@@ -67,8 +67,7 @@ Distributions.cf(d::StandardDist{Uniform,0}, t::Real) = Distributions.cf(nonstdd
 Distributions.gradlogpdf(d::StandardDist{Uniform,0}, x::Real) = zero(x)
 
 function Distributions.gradlogpdf(d::StandardDist{Uniform,N}, x::AbstractArray{<:Real,N}) where N
-    _checkvarsize(d, x)
-    zero(x)
+    zero(checked_var(d, x))
 end
 
 Base.rand(rng::AbstractRNG, d::StandardDist{Uniform,0}) = rand(rng)

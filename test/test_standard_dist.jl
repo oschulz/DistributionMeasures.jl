@@ -6,7 +6,7 @@ using Test
 using Random, Statistics, LinearAlgebra
 using Distributions, PDMats
 using StableRNGs
-import ForwardDiff
+import ForwardDiff, ChainRulesTestUtils
 
 
 @testset "standard_dist" begin
