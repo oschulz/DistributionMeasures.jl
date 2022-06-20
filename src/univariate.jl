@@ -149,8 +149,8 @@ for (A, B) in [
 end
 
 @inline MeasureBase.transport_origin(::Exponential) = StdExponential()
-@inline MeasureBase.to_origin(ν::Exponential, y) = scale(ν) \ y
-@inline MeasureBase.from_origin(ν::Exponential, x) = scale(ν) * x
+@inline MeasureBase.to_origin(ν::Exponential, y) = Distributions.scale(ν) \ y
+@inline MeasureBase.from_origin(ν::Exponential, x) = Distributions.scale(ν) * x
 
 
 
