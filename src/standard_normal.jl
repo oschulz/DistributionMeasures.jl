@@ -64,10 +64,10 @@ Distributions.logdetcov(d::StandardDist{Normal,1}) = 0
 
 
 function Distributions.sqmahal(d::StandardDist{Normal,N}, x::AbstractArray{<:Real,N}) where N
-    dot(x, checked_var(d, x))
+    dot(x, checked_arg(d, x))
 end
 
 function Distributions. sqmahal!(r::AbstractVector, d::StandardDist{Normal,N}, x::AbstractMatrix) where N
-    x_cols = eachcol(checked_var(d, first(eachcol(x))))
+    x_cols = eachcol(checked_arg(d, first(eachcol(x))))
     r .= dot.(x_cols, x_cols)
 end

@@ -15,9 +15,9 @@ using MeasureBase: AbstractMeasure, Lebesgue, Counting, ℝ
 using MeasureBase: StdMeasure, StdUniform, StdExponential, StdLogistic
 using MeasureBase: PowerMeasure, WeightedMeasure
 using MeasureBase: basemeasure, testvalue
-using MeasureBase: getdof, checked_var
+using MeasureBase: getdof, checked_arg
 using MeasureBase: transport_to, transport_def, transport_origin, from_origin, to_origin
-using MeasureBase: NoTransformOrigin, NoVarTransform
+using MeasureBase: NoTransformOrigin, NoTransport
 
 import Distributions
 using Distributions: Distribution, VariateForm, ValueSupport, ContinuousDistribution

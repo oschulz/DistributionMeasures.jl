@@ -107,14 +107,14 @@ StatsBase.entropy(d::StandardDist{D,N}) where {D,N} = length(d) * StatsBase.entr
 Distributions.insupport(d::StandardDist{D,0}, x::Real) where {D} = Distributions.insupport(nonstddist(d), x)
 
 function Distributions.insupport(d::StandardDist{D,N}, x::AbstractArray{<:Real,N}) where {D,N}
-    all(Base.Fix1(Distributions.insupport, StandardDist{D}()), checked_var(d, x))
+    all(Base.Fix1(Distributions.insupport, StandardDist{D}()), checked_arg(d, x))
 end
 
 
 @inline Distributions.logpdf(d::StandardDist{D,0}, x::U) where {D,U} = Distributions.logpdf(nonstddist(d), x)
 
 function Distributions.logpdf(d::StandardDist{D,N}, x::AbstractArray{<:Real,N}) where {D,N}
-    Distributions._logpdf(d, checked_var(d, x))
+    Distributions._logpdf(d, checked_arg(d, x))
 end
 
 function Distributions._logpdf(::StandardDist{D,1}, x::AbstractArray{<:Real,1}) where D
@@ -134,14 +134,14 @@ end
 Distributions.gradlogpdf(d::StandardDist{D,0}, x::Real) where {D} = Distributions.gradlogpdf(nonstddist(d), x)
 
 function Distributions.gradlogpdf(d::StandardDist{D,N}, x::AbstractArray{<:Real,N}) where {D,N}
-    Distributions.gradlogpdf.(StandardDist{D,0}(), checked_var(d, x))
+    Distributions.gradlogpdf.(StandardDist{D,0}(), checked_arg(d, x))
 end
 
 
 #@inline Distributions.pdf(d::StandardDist{D,0}, x::U) where {D,U} = pdf(nonstddist(d), x)
 
 function Distributions.pdf(d::StandardDist{D,1}, x::AbstractVector{U}) where {D,U<:Real}
-    Distributions._pdf(d, checked_var(d, x))
+    Distributions._pdf(d, checked_arg(d, x))
 end
 
 function Distributions._pdf(d::StandardDist{D,1}, x::AbstractVector{U}) where {D,U<:Real}
@@ -149,7 +149,7 @@ function Distributions._pdf(d::StandardDist{D,1}, x::AbstractVector{U}) where {D
 end
 
 function Distributions.pdf(d::StandardDist{D,2}, x::AbstractMatrix{U}) where {D,U<:Real}
-    Distributions._pdf(d, checked_var(d, x))
+    Distributions._pdf(d, checked_arg(d, x))
 end
 
 function Distributions._pdf(d::StandardDist{D,2}, x::AbstractMatrix{U}) where {D,U<:Real}
@@ -157,7 +157,7 @@ function Distributions._pdf(d::StandardDist{D,2}, x::AbstractMatrix{U}) where {D
 end
 
 function Distributions.pdf(d::StandardDist{D,N}, x::AbstractArray{U,N}) where {D,N,U<:Real}
-    Distributions._pdf(d, checked_var(d, x))
+    Distributions._pdf(d, checked_arg(d, x))
 end
 
 function Distributions._pdf(d::StandardDist{D,N}, x::AbstractArray{U,N}) where {D,N,U<:Real}
