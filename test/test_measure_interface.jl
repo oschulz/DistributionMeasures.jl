@@ -17,12 +17,12 @@ import MeasureBase
         x = rand(d)
         @inline @inferred(MeasureBase.logdensity_def(d, x)) == Distributions.logpdf(d, x)
         @inline @inferred(MeasureBase.unsafe_logdensityof(d, x)) == Distributions.logpdf(d, x)
+
+        MeasureBase.Interface.test_interface(d)
     end
 
-    @test @inferred(MeasureBase.basemeasure(c0)) == Lebesgue(ℝ)
-    @test @inferred(MeasureBase.basemeasure(c1)) == Lebesgue(ℝ) ^ 2
-    @test @inferred(MeasureBase.basemeasure(d0)) == Counting(ℤ)
-    @test @inferred(MeasureBase.basemeasure(d1)) == Counting(ℤ) ^ 2
+    @test @inferred(MeasureBase.basemeasure(c0)) == MeasureBase.Lebesgue(MeasureBase.ℝ)
+    @test @inferred(MeasureBase.basemeasure(c1)) == MeasureBase.Lebesgue(MeasureBase.ℝ) ^ 2
 
     @test @inferred(MeasureBase.insupport(c0, 3)) == true
     @test @inferred(MeasureBase.insupport(c0, -3)) == false
