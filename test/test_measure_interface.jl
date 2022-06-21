@@ -39,4 +39,6 @@ import MeasureBase
         # v1.6 can't type-infer this:
         @test (MeasureBase.params(c0)) == (α = 0.7, θ = 1.3)
     end
+
+    @test MeasureBase.∫(x -> Distributions.Normal(x, 0), Distributions.Normal()) isa MeasureBase.DensityMeasure
 end

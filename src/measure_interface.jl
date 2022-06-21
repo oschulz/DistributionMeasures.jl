@@ -18,3 +18,6 @@
 
 @inline MeasureBase.basemeasure(d::Distributions.Poisson) = Counting(MeasureBase.BoundedInts(static(0), static(Inf)))
 @inline MeasureBase.basemeasure(d::Distributions.Product{<:Any,<:Distributions.Poisson}) = Counting(MeasureBase.BoundedInts(static(0), static(Inf)))^size(d)
+
+
+MeasureBase.∫(f, base::Distribution) = MeasureBase.∫(f, convert(AbstractMeasure, base))
