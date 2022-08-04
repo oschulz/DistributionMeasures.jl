@@ -17,6 +17,7 @@ struct DistributionMeasure{F<:VariateForm,S<:ValueSupport,D<:Distribution{F,S}} 
     d::D
 end
 
+@inline MeasureBase.AbstractMeasure(m::AbstractMeasure) = m
 
 @inline MeasureBase.AbstractMeasure(d::Distribution) = DistributionMeasure(d)
 
