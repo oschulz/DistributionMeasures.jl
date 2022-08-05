@@ -1,7 +1,7 @@
 name = "DistributionMeasures"
 uuid = "35643b39-bfd4-4670-843f-16596ca89bf3"
 authors = ["Chad Scherrer <chad.scherrer@gmail.com> and contributors"]
-version = "0.2.2"
+version = "0.2.3"
 
 [deps]
 ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
@@ -38,7 +38,7 @@ ForwardDiffPullbacks = "0.2"
 Functors = "0.2, 0.3"
 InverseFunctions = "0.1"
 IrrationalConstants = "0.1"
-MeasureBase = "0.12"
+MeasureBase = "0.12, 0.13"
 PDMats = "0.11"
 Static = "0.5, 0.6"
 StatsBase = "0.32, 0.33"
