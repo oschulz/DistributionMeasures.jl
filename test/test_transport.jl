@@ -133,8 +133,8 @@ include("getjacobian.jl")
 
     @testset "transport_to autosel" begin
         for (M,R) in [
-            (StandardNormal, StandardNormal)
-            (Normal, StandardNormal)
+            (StdNormal, StdNormal)
+            (Normal, StdNormal)
             (StandardUniform, StandardUniform)
             (Uniform, StandardUniform)
         ]

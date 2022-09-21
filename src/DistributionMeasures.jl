@@ -12,12 +12,12 @@ using DensityInterface: logdensityof
 
 import MeasureBase
 using MeasureBase: AbstractMeasure, Lebesgue, Counting, ℝ
-using MeasureBase: StdMeasure, StdUniform, StdExponential, StdLogistic
+using MeasureBase: StdMeasure, StdUniform, StdExponential, StdLogistic, StdNormal
 using MeasureBase: PowerMeasure, WeightedMeasure
 using MeasureBase: basemeasure, testvalue
 using MeasureBase: getdof, checked_arg
 using MeasureBase: transport_to, transport_def, transport_origin, from_origin, to_origin
-using MeasureBase: NoTransformOrigin, NoTransport
+using MeasureBase: NoTransportOrigin, NoTransport
 
 import Distributions
 using Distributions: Distribution, VariateForm, ValueSupport, ContinuousDistribution
@@ -55,7 +55,6 @@ export MeasureLike
 include("utils.jl")
 include("autodiff_utils.jl")
 include("measure_interface.jl")
-include("stdnormal_measure.jl")
 include("standard_dist.jl")
 include("standard_uniform.jl")
 include("standard_normal.jl")
@@ -67,7 +66,6 @@ include("product.jl")
 include("reshaped.jl")
 include("dirichlet.jl")
 
-export StdNormal
 export DistributionMeasure
 export StandardDist
 
