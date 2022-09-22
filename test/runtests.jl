@@ -1,6 +1,9 @@
 using DistributionMeasures
 using Test
 
+using Aqua
+Aqua.test_all(DistributionMeasures; ambiguities = false)
+
 @testset "DistributionMeasures.jl" begin
     include("test_autodiff_utils.jl")
     include("test_measure_interface.jl")
