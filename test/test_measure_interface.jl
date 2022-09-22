@@ -18,7 +18,7 @@ import MeasureBase
         @test @inferred(MeasureBase.logdensity_def(d, x)) == Distributions.logpdf(d, x)
         @test @inferred(MeasureBase.unsafe_logdensityof(d, x)) == Distributions.logpdf(d, x)
 
-        MeasureBase.Interface.test_interface(d)
+        MeasureBase.Interface.test_interface(MeasureBase.AbstractMeasure(d))
     end
 
     @test @inferred(MeasureBase.basemeasure(c0)) == MeasureBase.Lebesgue(MeasureBase.ℝ)
