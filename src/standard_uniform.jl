@@ -72,4 +72,4 @@ end
 
 Base.rand(rng::AbstractRNG, d::StandardDist{Uniform,0}) = rand(rng)
 Base.rand(rng::AbstractRNG, d::StandardDist{Uniform,N}) where N = rand(rng, size(d)...)
-Random.rand!(rng::AbstractRNG, d::StandardDist{Uniform,N}, x::AbstractArray{<:Real,N}) where {D,N} = rand!(rng, x)
+Random.rand!(rng::AbstractRNG, d::StandardDist{Uniform,N}, x::AbstractArray{<:Real,N}) where {N} = rand!(rng, x)

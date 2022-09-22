@@ -49,7 +49,7 @@ Distributions.pdf(d::StandardDist{Normal,0}, x::U) where {U<:Real} = invsqrt2π 
 
 Base.rand(rng::AbstractRNG, d::StandardDist{Normal,0}) = randn(rng)
 Base.rand(rng::AbstractRNG, d::StandardDist{Normal,N}) where N = randn(rng, size(d)...)
-Random.rand!(rng::AbstractRNG, d::StandardDist{Normal,N}, x::AbstractArray{<:Real,N}) where {D,N} = Random.randn!(rng, x)
+Random.rand!(rng::AbstractRNG, d::StandardDist{Normal,N}, x::AbstractArray{<:Real,N}) where {N} = Random.randn!(rng, x)
 
 Distributions.invcov(d::StandardDist{Normal,1}) = Distributions.cov(d)
 Distributions.logdetcov(d::StandardDist{Normal,1}) = 0
