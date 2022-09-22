@@ -1,6 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-
 MeasureBase.getdof(ν::MvNormal) = length(ν)
 
 MeasureBase.transport_origin(ν::MvNormal) = StandardDist{Normal}(length(ν))

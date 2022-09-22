@@ -7,7 +7,6 @@ using Random, Statistics, LinearAlgebra
 using Distributions, PDMats
 using StableRNGs
 
-
 @testset "StandardDist{Normal}" begin
     stblrng() = StableRNG(789990641)
 
@@ -21,13 +20,13 @@ using StableRNGs
 
         @test @inferred(minimum(d)) == minimum(dref)
         @test @inferred(maximum(d)) == maximum(dref)
-        
+
         @test @inferred(Distributions.params(d)) == ()
         @test @inferred(partype(d)) == partype(dref)
-        
+
         @test @inferred(location(d)) == location(dref)
         @test @inferred(scale(d)) == scale(dref)
-        
+
         @test @inferred(eltype(typeof(d))) == eltype(typeof(dref))
         @test @inferred(eltype(d)) == eltype(dref)
 
@@ -38,17 +37,17 @@ using StableRNGs
         @test @inferred(median(d)) == median(dref)
         @test @inferred(mode(d)) == mode(dref)
         @test @inferred(modes(d)) ≈ modes(dref)
-        
+
         @test @inferred(var(d)) == var(dref)
         @test @inferred(std(d)) == std(dref)
         @test @inferred(skewness(d)) == skewness(dref)
         @test @inferred(kurtosis(d)) == kurtosis(dref)
-        
+
         @test @inferred(entropy(d)) == entropy(dref)
-        
+
         for x in [-Inf, -1.3, 0.0, 1.3, +Inf]
             @test @inferred(gradlogpdf(d, x)) == gradlogpdf(dref, x)
-            
+
             @test @inferred(logpdf(d, x)) == logpdf(dref, x)
             @test @inferred(pdf(d, x)) == pdf(dref, x)
             @test @inferred(logcdf(d, x)) == logcdf(dref, x)
@@ -71,13 +70,16 @@ using StableRNGs
         @test @inferred(rand!(stblrng(), d, fill(0.0))) == rand!(stblrng(), dref, fill(0.0))
         @test @inferred(rand(stblrng(), d, 5)) == rand(stblrng(), dref, 5)
 
-        @test @inferred(truncated(StandardDist{Normal}(), -2.2f0, 3.1f0)) isa Truncated{Normal{Float64}}
-        @test truncated(StandardDist{Normal}(), -2.2f0, 3.1f0) == truncated(Normal(0.0, 1.0), -2.2f0, 3.1f0)
+        @test @inferred(truncated(StandardDist{Normal}(), -2.2f0, 3.1f0)) isa
+              Truncated{Normal{Float64}}
+        @test truncated(StandardDist{Normal}(), -2.2f0, 3.1f0) ==
+              truncated(Normal(0.0, 1.0), -2.2f0, 3.1f0)
 
-        @test @inferred(product_distribution(fill(StandardDist{Normal}(), 3))) isa StandardDist{Normal,1}
-        @test product_distribution(fill(StandardDist{Normal}(), 3)) == StandardDist{Normal}(3)
+        @test @inferred(product_distribution(fill(StandardDist{Normal}(), 3))) isa
+              StandardDist{Normal,1}
+        @test product_distribution(fill(StandardDist{Normal}(), 3)) ==
+              StandardDist{Normal}(3)
     end
-
 
     @testset "StandardDist{Normal,1}" begin
         @test @inferred(StandardDist{Normal}(3)) isa StandardDist{Normal,1}
@@ -86,7 +88,8 @@ using StableRNGs
 
         @test @inferred(MvNormal(StandardDist{Normal}(3))) isa MvNormal{Int}
         @test @inferred(MvNormal(StandardDist{Normal}(3))) == MvNormal(ScalMat(3, 1.0))
-        @test @inferred(convert(MvNormal, StandardDist{Normal}(3))) == MvNormal(ScalMat(3, 1.0))
+        @test @inferred(convert(MvNormal, StandardDist{Normal}(3))) ==
+              MvNormal(ScalMat(3, 1.0))
 
         d = StandardDist{Normal}(3)
         dref = MvNormal(ScalMat(3, 1.0))
@@ -103,7 +106,7 @@ using StableRNGs
         @test @inferred(mean(d)) == mean(dref)
         @test @inferred(var(d)) == var(dref)
         @test @inferred(cov(d)) == cov(dref)
-        
+
         @test @inferred(mode(d)) == mode(dref)
         @test @inferred(modes(d)) == modes(dref)
 
@@ -115,7 +118,8 @@ using StableRNGs
         for x in fill.([-Inf, -1.3, 0.0, 1.3, +Inf], 3)
             # Distributions.insupport is inconsistent at +- Inf between Normal and MvNormal
             if !any(isinf, x)
-                @test @inferred(Distributions.insupport(d, x)) == Distributions.insupport(dref, x)
+                @test @inferred(Distributions.insupport(d, x)) ==
+                      Distributions.insupport(dref, x)
             end
             @test @inferred(logpdf(d, x)) == logpdf(dref, x)
             @test @inferred(pdf(d, x)) == pdf(dref, x)
@@ -125,6 +129,7 @@ using StableRNGs
 
         @test @inferred(rand(stblrng(), d)) == rand(stblrng(), d)
         @test @inferred(rand!(stblrng(), d, zeros(3))) == rand!(stblrng(), d, zeros(3))
-        @test @inferred(rand!(stblrng(), d, zeros(3, 10))) == rand!(stblrng(), d, zeros(3, 10))
+        @test @inferred(rand!(stblrng(), d, zeros(3, 10))) ==
+              rand!(stblrng(), d, zeros(3, 10))
     end
 end

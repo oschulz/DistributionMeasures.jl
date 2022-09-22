@@ -69,5 +69,4 @@ include("dirichlet.jl")
 export DistributionMeasure
 export StandardDist
 
-
 end # module
