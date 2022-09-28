@@ -27,8 +27,6 @@ end
     NamedTuple{propertynames(d)}(Distributions.params(d))
 end
 
-@inline MeasureBase.testvalue(d::Distribution) = testvalue(basemeasure(d))
-
 @inline function MeasureBase.basemeasure(d::Distributions.Poisson)
     Counting(MeasureBase.BoundedInts(static(0), static(Inf)))
 end
