@@ -134,7 +134,7 @@ end
 =#
 
 @inline function _result_numtype(d, x::T) where {T<:Real}
-    float(promote_type(T, testvalue(d)))
+    float(promote_type(T, typeof(testvalue(d))))
     # firsttype(first(typeof(x), promote_type(map(eltype, Distributions.params(d))...)))
 end
 
