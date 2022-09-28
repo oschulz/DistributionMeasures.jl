@@ -1,5 +1,7 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
+MeasureBase.insupport(μ::Distribution, x) = Distributions.insupport(μ, x)
+
 # Use ForwardDiff for univariate transformations:
 @inline function ChainRulesCore.rrule(
     ::typeof(transport_def),
