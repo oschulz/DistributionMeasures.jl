@@ -1,14 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-@inline MeasureBase.getdof(::Distribution{Univariate}) = static(1)
-
-@inline function MeasureBase.check_dof(
-    a::Distribution{Univariate},
-    b::Distribution{Univariate},
-)
-    nothing
-end
-
 # Use ForwardDiff for univariate transformations:
 @inline function ChainRulesCore.rrule(
     ::typeof(transport_def),
