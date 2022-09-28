@@ -9,7 +9,7 @@ using Distributions, ArraysOfArrays
 import ForwardDiff, Zygote
 
 using MeasureBase: transport_to, transport_def, transport_origin
-using MeasureBase: StdExponential
+using MeasureBase: StdExponential, StdNormal
 using DistributionMeasures: _trafo_cdf, _trafo_quantile
 
 include("getjacobian.jl")
@@ -135,9 +135,9 @@ include("getjacobian.jl")
     end
 
     @testset "transport_to autosel" begin
-        for (M, R) in [
-            (StdNormal, StdNormal)
-            (Normal, StdNormal)
+        for (M,R) in [
+            (StandardNormal, StandardNormal)
+            (Normal, StandardNormal)
             (StandardUniform, StandardUniform)
             (Uniform, StandardUniform)
         ]
