@@ -8,7 +8,7 @@ import Random
 using Random: AbstractRNG, rand!
 
 import DensityInterface
-using DensityInterface: logdensityof
+using DensityInterface: logdensityof, densityof
 
 import MeasureBase
 using MeasureBase: AbstractMeasure, Lebesgue, Counting, ℝ
