@@ -1,7 +1,5 @@
 # This file is a part of DistributionMeasures.jl, licensed under the MIT License (MIT).
 
-MeasureBase.insupport(μ::Distribution, x) = Distributions.insupport(μ, x)
-
 # Use ForwardDiff for univariate transformations:
 @inline function ChainRulesCore.rrule(
     ::typeof(transport_def),
@@ -14,14 +12,14 @@ end
 @inline function ChainRulesCore.rrule(
     ::typeof(transport_def),
     ν::MeasureBase.StdMeasure,
-    μ::Distribution{Univariate},
+    μ,
     x::Any,
 )
     ChainRulesCore.rrule(fwddiff(transport_def), ν, μ, x)
 end
 @inline function ChainRulesCore.rrule(
     ::typeof(transport_def),
-    ν::Distribution{Univariate},
+    ν,
     μ::MeasureBase.StdMeasure,
     x::Any,
 )
@@ -135,18 +133,18 @@ end
 end
 =#
 
-@inline function _result_numtype(d::Distribution{Univariate}, x::T) where {T<:Real}
-    float(promote_type(T, eltype(Distributions.params(d))))
+@inline function _result_numtype(d, x::T) where {T<:Real}
+    float(promote_type(T, testvalue(d)))
     # firsttype(first(typeof(x), promote_type(map(eltype, Distributions.params(d))...)))
 end
 
 @inline function MeasureBase.transport_def(
     ::StdUniform,
-    μ::Distribution{Univariate,Continuous},
+    μ,
     x,
 )
     R = _result_numtype(μ, x)
-    if Distributions.insupport(μ, x)
+    if MeasureBase.insupport(μ, x)
         y = _trafo_cdf(μ, x)
         convert(R, y)
     else
@@ -155,7 +153,7 @@ end
 end
 
 @inline function MeasureBase.transport_def(
-    ν::Distribution{Univariate,Continuous},
+    ν,
     ::StdUniform,
     x::T,
 ) where {T}
