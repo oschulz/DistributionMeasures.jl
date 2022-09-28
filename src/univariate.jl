@@ -51,7 +51,7 @@ end
 ) where {TAG}
     x_v = ForwardDiff.value(x)
     u = Distributions.cdf(d, x_v)
-    dudx = Distributions.pdf(d, x_v)
+    dudx = densityof(d, x_v)
     ForwardDiff.Dual{TAG}(u, dudx * ForwardDiff.partials(x))
 end
 
@@ -73,7 +73,7 @@ end
     u::ForwardDiff.Dual{TAG},
 ) where {TAG}
     x = _trafo_quantile_impl_generic(d, ForwardDiff.value(u))
-    dxdu = inv(Distributions.pdf(d, x))
+    dxdu = inv(densityof(d, x))
     ForwardDiff.Dual{TAG}(x, dxdu * ForwardDiff.partials(u))
 end
 
