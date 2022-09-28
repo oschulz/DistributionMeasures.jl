@@ -28,7 +28,7 @@ end
 
 const StandardUnivariateDist{D<:Distribution{Univariate,Continuous},U<:Integer} =
     StandardDist{D,0,U}
-const StandardMultivariteDist{D<:Distribution{Univariate,Continuous},U<:Integer} =
+const StandardMultivariateDist{D<:Distribution{Univariate,Continuous},U<:Integer} =
     StandardDist{D,1,U}
 
 function Base.show(io::IO, d::StandardDist{D}) where {D}
