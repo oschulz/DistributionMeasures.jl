@@ -9,11 +9,10 @@ using Distributions, ArraysOfArrays
 import ForwardDiff, Zygote
 
 using MeasureBase: transport_to, transport_def, transport_origin
-using MeasureBase: StdExponential
+using MeasureBase: StdExponential, StdNormal
 using DistributionMeasures: _trafo_cdf, _trafo_quantile
 
 include("getjacobian.jl")
-
 
 @testset "test_distribution_transform" begin
     function test_back_and_forth(trg, src)
@@ -23,7 +22,7 @@ include("getjacobian.jl")
             src_v_reco = transport_def(src, trg, y)
 
             @test x ≈ src_v_reco
-            
+
             f = x -> transport_def(trg, src, x)
             ref_ladj = logpdf(src, x) - logpdf(trg, y)
             @test ref_ladj ≈ logabsdet(getjacobian(f, x))[1]
@@ -62,9 +61,9 @@ include("getjacobian.jl")
         standnorm2_reshaped = reshape(stdmvnorm2, 1, 2)
 
         mvnorm = MvNormal([0.3, -2.9], [1.7 0.5; 0.5 2.3])
-        beta = Beta(3,1)
-        gamma = Gamma(0.1,0.7)
-        dirich = Dirichlet([0.1,4])
+        beta = Beta(3, 1)
+        gamma = Gamma(0.1, 0.7)
+        dirich = Dirichlet([0.1, 4])
 
         test_back_and_forth(stduvuni, stduvuni)
         test_back_and_forth(stduvnorm, stduvnorm)
@@ -115,11 +114,16 @@ include("getjacobian.jl")
     @testset "Custom cdf and quantile for dual numbers" begin
         Dual = ForwardDiff.Dual
 
-        @test _trafo_cdf(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1)) == cdf(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1))
+        @test _trafo_cdf(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1)) ==
+              cdf(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1))
         @test _trafo_cdf(Normal(0, 1), Dual(0.5, 1)) == cdf(Normal(0, 1), Dual(0.5, 1))
 
-        @test _trafo_quantile(Normal(0, 1), Dual(0.5, 1)) == quantile(Normal(0, 1), Dual(0.5, 1))
-        @test _trafo_quantile(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1)) == quantile(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1))
+        @test _trafo_quantile(Normal(0, 1), Dual(0.5, 1)) ==
+              quantile(Normal(0, 1), Dual(0.5, 1))
+        @test _trafo_quantile(
+            Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)),
+            Dual(0.5, 0, 0, 1),
+        ) == quantile(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1))
     end
 
     @testset "trafo autodiff pullbacks" begin
@@ -130,7 +134,6 @@ include("getjacobian.jl")
         @test isapprox(ForwardDiff.jacobian(f, x), Zygote.jacobian(f, x)[1], rtol = 10^-4)
     end
 
-
     @testset "transport_to autosel" begin
         for (M,R) in [
             (StandardNormal, StandardNormal)
@@ -140,10 +143,14 @@ include("getjacobian.jl")
         ]
             @test @inferred(transport_to(M, Weibull())) == transport_to(R(), Weibull())
             @test @inferred(transport_to(Weibull(), M)) == transport_to(Weibull(), R())
-            @test @inferred(transport_to(M, MvNormal(float(I(5))))) == transport_to(R(5), MvNormal(float(I(5))))
-            @test @inferred(transport_to(MvNormal(float(I(5))), M)) == transport_to(MvNormal(float(I(5))), R(5))
-            @test @inferred(transport_to(M, StdExponential()^(2,3))) == transport_to(R(6), StdExponential()^(2,3))
-            @test @inferred(transport_to(StdExponential()^(2,3), M)) == transport_to(StdExponential()^(2,3), R(6))
+            @test @inferred(transport_to(M, MvNormal(float(I(5))))) ==
+                  transport_to(R(5), MvNormal(float(I(5))))
+            @test @inferred(transport_to(MvNormal(float(I(5))), M)) ==
+                  transport_to(MvNormal(float(I(5))), R(5))
+            @test @inferred(transport_to(M, StdExponential()^(2, 3))) ==
+                  transport_to(R(6), StdExponential()^(2, 3))
+            @test @inferred(transport_to(StdExponential()^(2, 3), M)) ==
+                  transport_to(StdExponential()^(2, 3), R(6))
         end
     end
 end

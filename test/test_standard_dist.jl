@@ -8,7 +8,6 @@ using Distributions, PDMats
 using StableRNGs
 import ForwardDiff, ChainRulesTestUtils
 
-
 @testset "standard_dist" begin
     stblrng() = StableRNG(789990641)
 
@@ -17,12 +16,16 @@ import ForwardDiff, ChainRulesTestUtils
         (Uniform, (5,), product_distribution(fill(Uniform(0.0, 1.0), 5))),
         (Uniform, (2, 3), reshape(product_distribution(fill(Uniform(0.0, 1.0), 6)), 2, 3)),
         (Normal, (), Normal()),
-        (Normal, (), Normal(0., 1.0)),
+        (Normal, (), Normal(0.0, 1.0)),
         (Normal, (5,), MvNormal(Diagonal(fill(1.0, 5)))),
         (Normal, (2, 3), reshape(MvNormal(Diagonal(fill(1.0, 6))), 2, 3)),
         (Exponential, (), Exponential()),
         (Exponential, (5,), product_distribution(fill(Exponential(1.0), 5))),
-        (Exponential, (2, 3), reshape(product_distribution(fill(Exponential(1.0), 6)), 2, 3)),
+        (
+            Exponential,
+            (2, 3),
+            reshape(product_distribution(fill(Exponential(1.0), 6)), 2, 3),
+        ),
     ]
         @testset "StandardDist{$D}($(join(sz,",")))" begin
             N = length(sz)
@@ -47,8 +50,27 @@ import ForwardDiff, ChainRulesTestUtils
             @test @inferred(Distributions.params(d)) == ()
             @test @inferred(partype(d)) == partype(dref)
 
-            for f in [minimum, maximum, mean, median, mode, modes, var, std, skewness, kurtosis, location, scale, entropy]
-                supported_by_dref = try f(dref); true catch MethodError; false; end
+            for f in [
+                minimum,
+                maximum,
+                mean,
+                median,
+                mode,
+                modes,
+                var,
+                std,
+                skewness,
+                kurtosis,
+                location,
+                scale,
+                entropy,
+            ]
+                supported_by_dref = try
+                    f(dref)
+                    true
+                catch MethodError
+                    false
+                end
                 if supported_by_dref
                     @test @inferred(f(d)) ≈ f(dref)
                 end
@@ -66,19 +88,25 @@ import ForwardDiff, ChainRulesTestUtils
             end
 
             if size(d) == ()
-                for x in [minimum(dref), quantile(dref, 1//3), quantile(dref, 1//2), quantile(dref, 2//3), maximum(dref)]
+                for x in [
+                    minimum(dref),
+                    quantile(dref, 1 // 3),
+                    quantile(dref, 1 // 2),
+                    quantile(dref, 2 // 3),
+                    maximum(dref),
+                ]
                     for f in [logpdf, pdf, gradlogpdf, logcdf, cdf, logccdf, ccdf]
                         @test @inferred(f(d, x)) ≈ f(dref, x)
                     end
                 end
 
-                for x in [0, 1//3, 1//2, 2//3, 1]
+                for x in [0, 1 // 3, 1 // 2, 2 // 3, 1]
                     for f in [quantile, cquantile]
                         @test @inferred(f(d, x)) ≈ f(dref, x)
                     end
                 end
 
-                for x in log.([0, 1//3, 1//2, 2//3, 1])
+                for x in log.([0, 1 // 3, 1 // 2, 2 // 3, 1])
                     for f in [invlogcdf, invlogccdf]
                         @test @inferred(f(d, x)) ≈ f(dref, x)
                     end
@@ -94,10 +122,14 @@ import ForwardDiff, ChainRulesTestUtils
                     @test isapprox(@inferred(cf(d, t)), cf(dref, t), rtol = 1e-5)
                 end
 
-                @test @inferred(truncated(d, quantile(dref, 1//3), quantile(dref, 2//3))) == truncated(dref, quantile(dref, 1//3), quantile(dref, 2//3))
+                @test @inferred(
+                    truncated(d, quantile(dref, 1 // 3), quantile(dref, 2 // 3))
+                ) == truncated(dref, quantile(dref, 1 // 3), quantile(dref, 2 // 3))
 
-                @test @inferred(product_distribution(fill(d, 3))) == StandardDist{typeof(d)}(3)
-                @test @inferred(product_distribution(fill(d, 3, 4))) == StandardDist{typeof(d)}(3, 4)
+                @test @inferred(product_distribution(fill(d, 3))) ==
+                      StandardDist{typeof(d)}(3)
+                @test @inferred(product_distribution(fill(d, 3, 4))) ==
+                      StandardDist{typeof(d)}(3, 4)
             end
 
             if length(size(d)) == 1
@@ -111,9 +143,11 @@ import ForwardDiff, ChainRulesTestUtils
 
             @test @inferred(rand(stblrng(), d)) == rand(stblrng(), dref)
             @test @inferred(rand(stblrng(), d, 5)) == rand(stblrng(), dref, 5)
-            @test @inferred(rand!(stblrng(), d, zeros(size(d)...))) == rand!(stblrng(), dref, zeros(size(dref)...))
+            @test @inferred(rand!(stblrng(), d, zeros(size(d)...))) ==
+                  rand!(stblrng(), dref, zeros(size(dref)...))
             if length(size(d)) == 1
-                @test @inferred(rand!(stblrng(), d, zeros(size(d)..., 5))) == rand!(stblrng(), dref, zeros(size(dref)..., 5))
+                @test @inferred(rand!(stblrng(), d, zeros(size(d)..., 5))) ==
+                      rand!(stblrng(), dref, zeros(size(dref)..., 5))
             end
         end
     end

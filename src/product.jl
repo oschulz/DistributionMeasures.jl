@@ -3,9 +3,7 @@
 const _StdPowMeasure1 = PowerMeasure{<:StdMeasure,<:NTuple{1,Base.OneTo}}
 const _UniformProductDist1x{D} = Distributions.Product{Continuous,D,<:AbstractVector{D}}
 
-
 MeasureBase.getdof(d::_UniformProductDist1x) = length(d)
-
 
 function _product_dist_trafo_impl(νs, μs, x)
     fwddiff(transport_def).(νs, μs, x)

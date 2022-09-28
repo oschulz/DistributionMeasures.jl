@@ -22,7 +22,7 @@ import MeasureBase
     end
 
     @test @inferred(MeasureBase.basemeasure(c0)) == MeasureBase.Lebesgue(MeasureBase.ℝ)
-    @test @inferred(MeasureBase.basemeasure(c1)) == MeasureBase.Lebesgue(MeasureBase.ℝ) ^ 2
+    @test @inferred(MeasureBase.basemeasure(c1)) == MeasureBase.Lebesgue(MeasureBase.ℝ)^2
 
     @test @inferred(MeasureBase.insupport(c0, 3)) == true
     @test @inferred(MeasureBase.insupport(c0, -3)) == false
@@ -40,5 +40,6 @@ import MeasureBase
         @test (MeasureBase.params(c0)) == (α = 0.7, θ = 1.3)
     end
 
-    @test MeasureBase.∫(x -> Distributions.Normal(x, 0), Distributions.Normal()) isa MeasureBase.DensityMeasure
+    @test MeasureBase.∫(x -> Distributions.Normal(x, 0), Distributions.Normal()) isa
+          MeasureBase.DensityMeasure
 end

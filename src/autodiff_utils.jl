@@ -2,18 +2,19 @@
 
 @inline _adignore_call(f) = f()
 @inline _adignore_call_pullback(@nospecialize ΔΩ) = (NoTangent(), NoTangent())
-ChainRulesCore.rrule(::typeof(_adignore_call), f) = _adignore_call(f), _adignore_call_pullback
+function ChainRulesCore.rrule(::typeof(_adignore_call), f)
+    _adignore_call(f), _adignore_call_pullback
+end
 
 macro _adignore(expr)
     :(_adignore_call(() -> $(esc(expr))))
 end
 
-
 function _pushfront(v::AbstractVector, x)
     T = promote_type(eltype(v), typeof(x))
     r = similar(v, T, length(eachindex(v)) + 1)
     r[firstindex(r)] = x
-    r[firstindex(r)+1:lastindex(r)] = v
+    r[(firstindex(r)+1):lastindex(r)] = v
     r
 end
 
@@ -21,17 +22,16 @@ function ChainRulesCore.rrule(::typeof(_pushfront), v::AbstractVector, x)
     result = _pushfront(v, x)
     function _pushfront_pullback(thunked_ΔΩ)
         ΔΩ = unthunk(thunked_ΔΩ)
-        (NoTangent(), ΔΩ[firstindex(ΔΩ)+1:lastindex(ΔΩ)], ΔΩ[firstindex(ΔΩ)])
+        (NoTangent(), ΔΩ[(firstindex(ΔΩ)+1):lastindex(ΔΩ)], ΔΩ[firstindex(ΔΩ)])
     end
     return result, _pushfront_pullback
 end
-
 
 function _pushback(v::AbstractVector, x)
     T = promote_type(eltype(v), typeof(x))
     r = similar(v, T, length(eachindex(v)) + 1)
     r[lastindex(r)] = x
-    r[firstindex(r):lastindex(r)-1] = v
+    r[firstindex(r):(lastindex(r)-1)] = v
     r
 end
 
@@ -39,16 +39,14 @@ function ChainRulesCore.rrule(::typeof(_pushback), v::AbstractVector, x)
     result = _pushback(v, x)
     function _pushback_pullback(thunked_ΔΩ)
         ΔΩ = unthunk(thunked_ΔΩ)
-        (NoTangent(), ΔΩ[firstindex(ΔΩ):lastindex(ΔΩ)-1], ΔΩ[lastindex(ΔΩ)])
+        (NoTangent(), ΔΩ[firstindex(ΔΩ):(lastindex(ΔΩ)-1)], ΔΩ[lastindex(ΔΩ)])
     end
     return result, _pushback_pullback
 end
 
+_dropfront(v::AbstractVector) = v[(firstindex(v)+1):lastindex(v)]
 
-_dropfront(v::AbstractVector) = v[firstindex(v)+1:lastindex(v)]
-
-_dropback(v::AbstractVector) = v[firstindex(v):lastindex(v)-1]
-
+_dropback(v::AbstractVector) = v[firstindex(v):(lastindex(v)-1)]
 
 _rev_cumsum(xs::AbstractVector) = reverse(cumsum(reverse(xs)))
 
@@ -60,7 +58,6 @@ function ChainRulesCore.rrule(::typeof(_rev_cumsum), xs::AbstractVector)
     end
     return result, _rev_cumsum_pullback
 end
-
 
 # Equivalent to `cumprod(xs)``:
 _exp_cumsum_log(xs::AbstractVector) = exp.(cumsum(log.(xs)))
