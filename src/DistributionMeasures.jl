@@ -17,7 +17,7 @@ using MeasureBase: PowerMeasure, WeightedMeasure
 using MeasureBase: basemeasure, testvalue
 using MeasureBase: getdof, checked_arg
 using MeasureBase: transport_to, transport_def, transport_origin, from_origin, to_origin
-using MeasureBase: NoTransformOrigin, NoTransport
+using MeasureBase: NoTransportOrigin, NoTransport
 
 import Distributions
 using Distributions: Distribution, VariateForm, ValueSupport, ContinuousDistribution
