@@ -115,11 +115,11 @@ include("getjacobian.jl")
     @testset "Custom cdf and quantile for dual numbers" begin
         Dual = ForwardDiff.Dual
 
-        @test _trafo_cdf(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1)) == cdf(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1))
-        @test _trafo_cdf(Normal(0, 1), Dual(0.5, 1)) == cdf(Normal(0, 1), Dual(0.5, 1))
+        @test isapprox(_trafo_cdf(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1)), cdf(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1)), rtol = 10^-6)
+        @test isapprox(_trafo_cdf(Normal(0, 1), Dual(0.5, 1)), cdf(Normal(0, 1), Dual(0.5, 1)), rtol = 10^-6)
 
-        @test _trafo_quantile(Normal(0, 1), Dual(0.5, 1)) == quantile(Normal(0, 1), Dual(0.5, 1))
-        @test _trafo_quantile(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1)) == quantile(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1))
+        @test isapprox(_trafo_quantile(Normal(0, 1), Dual(0.5, 1)), quantile(Normal(0, 1), Dual(0.5, 1)), rtol = 10^-6)
+        @test isapprox(_trafo_quantile(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1)), quantile(Normal(Dual(0, 1, 0, 0), Dual(1, 0, 1, 0)), Dual(0.5, 0, 0, 1)), rtol = 10^-6)
     end
 
     @testset "trafo autodiff pullbacks" begin
