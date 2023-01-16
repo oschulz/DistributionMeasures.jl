@@ -61,7 +61,7 @@ function _flat_powrand(rng::AbstractRNG, ::Type{T}, d::ReshapedDistribution{N,<:
     convert_realtype(T, reshape(rand(d.dist, prod(sz)), d.dims..., sz...))
 end
 
-function _flat_powrand(rng::AbstractRNG, ::Type{T}, d::Distribution, sz::Dims) where {T<:Real,N}
+function _flat_powrand(rng::AbstractRNG, ::Type{T}, d::Distribution, sz::Dims) where {T<:Real}
     flatview(ArrayOfSimilarArrays(convert_realtype(T, rand(d, sz))))
 end
 
